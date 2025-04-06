@@ -1,0 +1,317 @@
+/*
+ * \paragraph{:Purpose:}
+ *
+ * A parser, that parsers domain specifications (see
+ * \class{DomainSpecification}).
+ **/
+
+%{
+  #include<iostream>
+  #include"include/cuddObj.hh"
+  #include"formula.h++"
+
+  #include"domainSpecification.h++"
+
+  int yyparse();
+  void yyerror(char*);
+  int yylex();
+
+  using namespace std;
+  using namespace Formula;
+  using namespace MDP;
+
+  #ifdef PARSER_DEBUG
+  #    define DEBUG_OUT(x) cout << x << endl;
+  #else
+  #    define DEBUG_OUT(x)
+  #endif
+  
+  /*Temporary (while parse) pointer to CUDD garbage collection.*/
+  extern Cudd *mgr;
+  
+  /*Temporary (while parse) specification of problem domain.*/
+  extern DomainSpecification  *domSpec;
+
+  /*Does this parser have to add the start state proposition to any parsed
+   *PLTL specification.*/
+  bool requireStartStateProposition = false;
+%}
+
+
+/*Design::(query:Charles)<CC> It is possible that we shall benefit
+  from building domain specification components (@domSpec) rather than
+  making explicit calls to that specification.*/
+%union 
+{
+    /*CC*///MDP::RewardSpecification* reward;
+    
+    Formula::formula* formula; 
+    
+    /*Structured probability distribution.*/
+    ADD *add;
+
+    /*CC*///MDP::ActionSpecification *actiondef;
+
+    /*Conditional probability table.*/
+    MDP::ActionSpecification::CPTS *cpts;
+
+    char* string_1;/*Proposition and action identifiers.*/
+    double double_1;/*Type of reward values.*/
+    bool boolean_1;/*Type of assigned propositional values.*/
+    int int_1;
+}
+
+%type <double_1> number
+
+/*Reward  types.*/
+
+%type <formula> literal
+%type <formula> formula
+/*CC*///%type <reward> reward
+
+/*Action types.*/
+%type <add> prob
+//%type <cpts> cpt
+%type <cpts> cpts
+/*CC*///%type <actiondef> actiondef
+
+/*Formula and/or action related tokens*/
+
+%token <boolean_1> BOOL
+%token <string_1> ID
+%token <double_1> NUM
+%token <int_1> INT
+
+/*Action related tokens*/
+
+%token ACTION
+%token ENDACTION
+
+/*Formula related operators*/
+
+%token <operator> IMP
+%token <operator> PRV
+%token <operator> PDI
+%token <operator> PBX
+%token <operator> NXT
+%token <operator> FBX
+%token <operator> NOT
+%token <operator> IFF
+%token <operator> AND
+%token <operator> OR
+%token <operator> FUT
+%token <operator> SNC
+
+%left IMP IFF
+%left AND OR
+%left FUT SNC
+%nonassoc PRV PBX PDI NXT FBX NOT
+
+%%
+input
+: /* empty -- NMRDPP can parse nothing.*/
+| init reward actiondefs {DEBUG_OUT("Finished parse");}
+;
+
+init
+: /*Empty -- The initial value vector does not have to be given*/
+| ID '=' BOOL 
+{
+    domSpec->addProposition($1);
+    DEBUG_OUT("IVV DONE!");
+    if($3 != false)
+	domSpec->addToStartState($1)
+}
+| init ID '=' BOOL 
+{
+    domSpec->addProposition($2);
+    DEBUG_OUT("IVV DONE!");
+    if($4 != false)
+	domSpec->addToStartState($2)
+}
+| error 
+{
+    cout<<"(Parse Error) --  Invalid domain specification.\n";
+    cout<<"\tError on line: "<<@1.last_line<<endl;
+}
+;
+
+/*Reward productions*/
+
+reward
+: '[' ID ',' number ']' '?' formula {
+  DEBUG_OUT("Parsed reward spec.");
+  domSpec->addSpecComponent($2, $4, $7);
+}
+| reward '[' ID ',' number ']' '?' formula {
+  DEBUG_OUT("Parsed reward spec component.");
+  domSpec->addSpecComponent($3, $5, $8);
+}
+| '[' ID ']' '?' formula {
+  DEBUG_OUT("Parsed control spec.\n");
+  domSpec->addSpecComponent($2, 0, $5);
+}
+| reward '[' ID ']' '?' formula {
+  DEBUG_OUT("Parsed control spec component.\n");
+  domSpec->addSpecComponent($3, 0, $6);}
+;
+
+formula
+: literal {
+  DEBUG_OUT("Parsed literal.");
+  $$ = $1;}
+| formula OR formula {
+  DEBUG_OUT("Parsed disj.");
+  $$ = new disj($1, $3); }
+| formula AND formula {
+  DEBUG_OUT("Parsed conj.");
+  $$ = new conj($1, $3); }
+| NXT formula  %prec NXT {
+  DEBUG_OUT("Parsed nxt.");
+  $$ = new nxt($2);}
+| NOT formula  %prec NOT {
+ DEBUG_OUT("Parsed not.");
+  $$ = new lnot($2);}
+| formula FUT formula {
+  DEBUG_OUT("Parsed fut.");
+  $$ = new fut($1, $3);}
+| formula SNC formula {
+  DEBUG_OUT("Parsed snc.");
+  $$ = new snc($1, $3);}
+| formula IMP formula {
+  DEBUG_OUT("Parsed imp");
+  $$ = new imp($1, $3);}
+| FBX formula  %prec FBX {
+  DEBUG_OUT("Parsed fbx.");
+  $$ = new fbx($2);}
+| PBX formula  %prec PBX {
+  DEBUG_OUT("Parsed pbx.");
+  $$ = new pbx($2);}
+| PDI formula  %prec PDI {
+  DEBUG_OUT("Parsed pdi.");
+  $$ = new pdi($2);}
+| formula IFF  formula {
+  DEBUG_OUT("Parsed iff.");
+  $$ = new iff($1, $3);}
+
+| PRV  formula  %prec PRV {
+  DEBUG_OUT("Parsed prv.");
+  if(requireStartStateProposition)
+      $$ = new conj(new prv($2), new lnot(new startStateProposition()));
+  else
+      $$ = new prv($2);}
+| NXT '^' INT formula  %prec NXT {DEBUG_OUT("Parsed nxt^");
+  $$ = new nxtNest($4, $3);}
+| NXT AND '<' INT formula  %prec NXT {DEBUG_OUT("Parsed nxt<.");
+  $$ = new nxtConj($5, $4);}
+| NXT OR '<' INT formula  %prec NXT {DEBUG_OUT("Parsed nxt<.");
+  $$ = new nxtDisj($5, $4);}
+| PRV '^' INT formula  %prec PRV {DEBUG_OUT("Parsed nxt^");
+  $$ = new prvNest($4, $3);}
+| PRV AND '<' INT formula  %prec PRV {DEBUG_OUT("Parsed nxt<.");
+  $$ = new prvConj($5, $4);}
+| PRV OR '<' INT formula  %prec PRV {DEBUG_OUT("Parsed nxt<.");
+  $$ = new prvDisj($5, $4);}
+| '(' formula ')' {DEBUG_OUT("parent.");
+  $$ = $2}
+;
+
+literal
+: ID {DEBUG_OUT("");
+ domSpec->addProposition($1);
+ $$ = new literal ($1);
+ free($1);}
+| BOOL {DEBUG_OUT("");
+ $$ = new assLiteral($1);}
+| '$' {DEBUG_OUT("");
+ $$ = new dollars();}
+;
+
+
+/*Action Productions*/
+
+actiondefs
+: actiondef
+| actiondefs actiondef
+;
+
+actiondef
+: ACTION ID cpts ENDACTION 
+{
+    DEBUG_OUT("Parsed an action.");
+    domSpec->addSpecComponent($2, $3);
+}
+;
+
+/*Conditional probability tables.*/
+
+cpts
+: cpts ID prob 
+{
+    domSpec->addProposition($2);
+
+    (*$$)[($2)] = *$3;
+
+    delete $3;
+}
+|
+{
+    $$ = new MDP::ActionSpecification::CPTS;
+}
+;
+
+/*ADD (probability distribution over domain propositions).*/
+prob
+: '(' number ')' 
+{
+    DEBUG_OUT("Parsed a prob.");
+ 
+    $$ = new ADD;
+
+    *$$ = mgr->constant($2);
+
+    #ifdef PARSER_DEBUG
+    cout << "f";
+    $$->print(2,2);
+    #endif
+}
+| '(' ID prob prob ')' 
+{
+    DEBUG_OUT("Parsing a prob.");
+
+    domSpec->addProposition($2);
+    
+    $$ = new ADD;
+
+    DEBUG_OUT("Proposition added with ID :: "<<$2<<":"<<domSpec->getProposition($2));
+
+    *$$ = mgr->addVar(domSpec->getProposition($2));
+
+    DEBUG_OUT("Making a new add.");
+
+    *$$ = $$->Ite(*$3, *$4);
+
+    delete $3;
+    delete $4;
+
+    #ifdef PARSER_DEBUG
+    cout <<"f"; 
+    $$->print(2,2);
+    #endif
+}
+;
+
+number
+: NUM {
+    $$ = $1;
+}
+| INT {
+    $$ = $1;
+}
+
+%%
+
+void yyerror (char *s)  /* Called by yyparse on error */
+{}
+
+

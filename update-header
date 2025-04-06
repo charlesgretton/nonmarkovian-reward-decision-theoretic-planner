@@ -1,0 +1,21 @@
+#!/bin/bash
+CPPFILE=$1
+HPPFILE=$2
+shift 2
+ruby ./make-header $MAKE_HEADER_OPTS "$@" "$CPPFILE" >${HPPFILE}.header || exit
+
+# We ignore #line directives when generating headers - this has the
+# disadvantage that warnings/errors could potentially be reported on
+# incorrect line numbers.  If they are fixed straight away, this
+# shouldn't happen.  The reason we do this is because otherwise the
+# header file would change every time a line was added or deleted from
+# the C++ file, which would cause everything that includes it to be
+# recompiled unnecessarily.
+
+cat ${HPPFILE}.header | grep -v '#line' >${HPPFILE}.header.striped
+if cat "$HPPFILE" 2>/dev/null | grep -v '#line' | diff - ${HPPFILE}.header.striped >/dev/null 2>&1; then
+    true
+else
+    cp ${HPPFILE}.header "$HPPFILE"
+fi
+rm -f ${HPPFILE}.header*

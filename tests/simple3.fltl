@@ -1,0 +1,11 @@
+//This reward element specifies that if proposition $Q$ becomes true at
+//the end of a sequence in which $P$ was true for $3$ states reward is
+//allocated.
+[simple3,1.0]? fbx ( ( (nxt and < 4 P) and (nxt ^ 4 Q) ) -> (nxt ^ 4 $) )
+
+action NA
+        Q       (Q      (0.50)
+                        (0.50))
+        P       (P      (0.50)
+                        (0.50))
+endaction

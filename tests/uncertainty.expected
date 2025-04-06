@@ -1,0 +1,8 @@
+
+digraph "Constraint specification" {
+center = true;
+edge [dir = none];
+n0 [label="1.00" shape=box];
+}
+
+

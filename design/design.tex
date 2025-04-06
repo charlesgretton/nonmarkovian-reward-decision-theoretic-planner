@@ -1,0 +1,100 @@
+\documentclass[12pt,titlepage]{article}
+\usepackage{a4}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{verbatim}
+%\usepackage{index}
+\usepackage{longtable}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{times} % Times Roman + Helvetica + Courier
+\usepackage{rotating}
+\usepackage{colortbl}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\pagestyle{fancy}
+
+\raggedright
+\setlength{\headheight}{15pt}
+\setlength{\emergencystretch}{3em}
+
+\makeindex
+
+%Non-Markovian Reward Decision Process Planner
+\newcommand{\appp}{\textsf{NMRDPP's}}
+\newcommand{\app}{\textsf{NMRDPP}} 
+\newcommand{\apps}{\app{} } 
+\newcommand{\fltl}{\$FLTL}
+\newcommand{\pltl}{PLTL}
+\newcommand{\imp}[1]{\texttt{#1} \index{#1}}
+\newcommand{\url}[1]{\emph{#1}}
+
+\newcommand{\fref}[1]{Figure~\ref{fig:#1}}
+\newcommand{\sref}[1]{Section~\ref{sec:#1}}
+\newcommand{\tref}[1]{Table~\ref{tab:#1}}
+\newcommand{\aref}[1]{Appendix~\ref{app:#1}}
+
+\newcommand{\cha}{Charles Gretton}
+\newcommand{\dav}{David Price}
+\newcommand{\sylvie}{Sylvie Thi\'ebaux}
+
+%************************************************************************Defs
+\newcommand{\module}[1]{\texttt{#1}}
+
+\newcommand{\member}[1]{\textsl{#1}}
+
+\newcommand{\class}[1]{\textsf{#1}}
+
+\newcommand{\argument}[1]{\emph{#1}}
+
+\newcommand{\method}[1]{\emph{\textrm{#1}}}
+
+\newcommand{\parent}[1]{\emph{\textrm{#1}}}
+
+\newcommand{\namespace}[1]{``\textsf{#1}''}
+
+\newcommand{\child}[1]{\textsf{#1}}
+
+\newcommand{\type}[1]{\class{#1}}
+
+\newcommand{\struct}[1]{\class{#1}}
+
+\newcommand{\function}[1]{$#1$}
+
+%Some definitions so that we are able to draw the P/$F:LTL operators.
+\def\pbx{\rlap{$\kern0.02em\mathord-$}\lower0.37ex\hbox{$\Box$}}
+\def\prv{\rlap{\hskip 1pt$\kern0.01em\mathord-$}\lower0.10ex\hbox{$\bigcirc$}}
+\def\pdi{\rlap{$\kern0.04em\mathord-$}\lower0.37ex\hbox{$\Diamond$}}
+\def\fbx{\lower0.37ex\hbox{$\Box$}}
+\def\nxt{\kern0.01em{\bigcirc}}
+\def\fdi{\lower0.37ex\hbox{$\Diamond$}}
+
+%TODO
+\newcommand{\fut}{\mathcal{U}}
+\newcommand{\strFut}{\mathcal{W}}
+\newcommand{\snc}{\mathcal{S}}
+
+%\setcounter{secnumdepth}{5}
+
+\bibliographystyle{plain}
+
+\title{\app \\
+Software Design Document
+}
+\author{\cha{} and \dav}
+
+\begin{document}
+\maketitle
+\setcounter{page}{2}
+\tableofcontents
+%\listoffigures
+%\listoftables
+\clearpage
+
+\section{Classes}
+\input{modules.tex}
+
+\end{document}

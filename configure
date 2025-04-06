@@ -1,0 +1,8 @@
+#!/bin/bash
+
+print-no-ruby-message() {
+    echo "This system requires ruby to compile."
+    echo "please download it from http://www.ruby-lang.org/"
+}
+    
+ruby ./configure.rb "$@" || print-no-ruby-message

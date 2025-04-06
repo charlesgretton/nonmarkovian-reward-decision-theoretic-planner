@@ -1,0 +1,4 @@
+loadWorld("prvNest.pltl")
+PLTLvarExpand
+actionToDot("a", "(prv^2 a)")
+quit

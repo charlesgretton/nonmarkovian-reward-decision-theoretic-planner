@@ -1,0 +1,9 @@
+results
+*.world
+*.cmd
+*.ps
+*.eps
+*.dot
+data*
+print.*
+tmp*

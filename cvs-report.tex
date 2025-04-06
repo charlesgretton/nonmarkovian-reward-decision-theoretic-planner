@@ -1,0 +1,40 @@
+\documentclass[12pt,titlepage]{article}
+\usepackage{a4}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{verbatim}
+\usepackage{longtable}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{times} % Times Roman + Helvetica + Courier
+\usepackage{rotating}
+\usepackage{colortbl}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newcommand{\cha}{Charles Gretton}
+\newcommand{\dav}{David Price}
+
+\title{CVS log}
+\author{\cha{} and \dav}
+
+%\addtolength{\voffset}{-1.5cm}
+%\addtolength{\textheight}{2.5cm}
+\addtolength{\hoffset}{-0.8cm}
+\addtolength{\textwidth}{1.6cm}
+
+\begin{document}
+
+\begin{longtable}{|p{2cm}|p{1.2cm}|p{6cm}|p{6cm}|}
+\hline
+\textbf{Date} & \textbf{User} & \textbf{Files effected} & \textbf{Change description}
+\endhead
+\hline
+
+\input{cvs-report-inc.tex}
+
+\end{longtable}
+
+\end{document}

@@ -1,0 +1,4 @@
+loadWorld("prvOr.pltl")
+PLTLvarExpand
+actionToDot("a", "(prv or <2 a)")
+quit

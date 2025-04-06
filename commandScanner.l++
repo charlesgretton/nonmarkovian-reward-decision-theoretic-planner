@@ -1,0 +1,71 @@
+%{ 
+
+#include <string>
+#include <vector>
+using namespace std;
+
+#include "CommandInterpreter.h++"
+#include "commandParser.h++"
+
+#define YY_USER_INIT yyin = CommandInterpreter::getInstance()->nullInput();
+
+%}
+
+ws      [ \t]+
+symb    [a-zA-Z_-]
+id      {symb}{symb}*
+digit   [0-9]
+number  [-+]?{digit}*\.?{digit}*
+string  ["][^"]*["]
+sstring ['][^']*[']
+%% /* " */
+{ws}        { /* no action */ }
+"help"      {return(HELP);}
+{id}        {
+                commandyylval.str = new string(yytext);
+                return KEYWORD;
+            }
+{number}    {
+                commandyylval.str = new string(yytext);
+                return STRING;
+            }            
+{string}    {
+                commandyylval.str = new string(yytext, 1, strlen(yytext) - 2);
+                return STRING;
+            }
+{sstring}   {
+                commandyylval.str = new string(yytext, 1, strlen(yytext) - 2);
+                return STRING;
+            }
+"\\\n"      { /* no action */ }
+
+"\n"        {return(yytext[0]);}
+.           {return(yytext[0]);}
+
+<<EOF>> { yyterminate();}
+%%
+int yywrap()
+{
+    string line;
+    int result;
+
+    static YY_BUFFER_STATE buf = 0;
+
+    if (buf != 0)
+        yy_delete_buffer(buf);
+        
+    result = CommandInterpreter::getInstance()->getLine(line);
+    if (result == 0)
+        buf = yy_scan_string(line.c_str());
+    
+    return result;
+}
+
+/* #define YY_NO_UNPUT used to remove yyunput, but doesn't seem to
+ * now, so we use this to avoid warnings about it being defined but
+ * not used. */
+static void dummy()
+{
+    yyunput(0, 0);
+    dummy();
+}

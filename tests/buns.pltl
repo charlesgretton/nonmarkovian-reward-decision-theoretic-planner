@@ -1,0 +1,215 @@
+//Before we start, some useful commands are:
+%> printDomain("") | "grep 'REWARD = 1000'"
+%> printDomain("") | "grep 'REWARD = 0' | wc"
+
+sultanas = ff
+sugar = ff
+flour = ff
+yeast = ff
+water = ff
+warmWater = ff
+milk = ff
+mixedSpice = ff
+
+yeastReaction = ff
+burnt = ff
+claggy = ff
+crisp = ff
+soft = ff
+delivered = ff
+inOven = ff
+
+#define mixed (sultanas and sugar and flour and yeast and water and milk and mixedSpice)
+#define goodMix (sultanas and sugar and flour and yeast and water and warmWater and milk and mixedSpice)
+
+#define cooked (burnt or crisp)
+
+//Trivial Markovian reward examples.
+[goodChef, 100.0]? (mixed and inOven)
+[greatChef, 500.0]? (goodMix and inOven)
+
+//non-Markovian reward, could be more natural. If the mixture is
+//mixed, and in the next state it is placed in the oven, no matter what
+//happens that next state is rewarding.
+[goodChef, 100.0]? (prv mixed and inOven)
+[greatChef, 500.0]? (prv goodMix and inOven)
+
+
+----------------------------------Classic temporal rewards
+
+//When the yeast has reacted and the mixture is in the oven, then 
+//reward is received whenever a bun transitions from "claggy" to 
+//"soft". This reward ceases to be allocated once the bun is 
+//"cooked".
+[inThePipeline,100.0]? ((~cooked and (prv tt)) snc (inOven and yeastReaction)) 
+             and (prv claggy and soft)
+
+//Since the customer has arrived we have had the bun in the oven.
+[attendingToCustomer, 53.0]? inOven snc customer
+
+//There is always a small reward after the first customer has 
+//received a bun.
+[afterFirstCustomer, 10.0]? pdi (customer and delivered)
+
+//Or perhaps a correct mix would be better specified as
+[correctMix2,1800.0]? ( prv ^ 3 (flour and sugar) 
+			     and prv or < 3 (milk and water) )
+
+----------------------------------Rewards involving the start state
+
+//If the machine gets off to a good start then it is given a reward.
+[aGoodStart, 1000.0]? ( prv ^ 7 (warmWater) 
+		       and prv ^ 6 (flour and sugar) 
+		       and prv ^ 5 (yeast) 
+		       and prv ^ 4 (water and milk) 
+		       and prv ^ 3 (mixedSpice and sultanas) 
+		       and prv ^ 2 (kneaded) 
+		       and prv ^ 1 (inOven) 
+		       and (yeastReaction)) and prv ^ 8 ~ prv tt
+
+//If the machine delivers 10 states from the start state then it gets
+//a reward.
+[inTenStates, 100.0]? delivered and prv ^ 10 ~ prv tt
+
+----------------------------------Action Specification
+
+action wait
+    yeastReaction (yeastReaction (1.0)
+				 (water (yeast (warmWater (0.85)
+							  (0.15))
+					       (0.0))
+					(0.0)))   
+    claggy (burnt (0.0) 
+		 (crisp (0.0)
+			(soft (0.0)
+			      (inOven (claggy (0.63)
+					     (0.0))
+				      (claggy (1.0)
+					     (0.0))))))
+    soft (burnt (0.0) 
+		(crisp (0.0)
+		       (inOven (soft (0.2) 
+				     (claggy (0.37)
+					    (0.0)))
+			       (soft (1.0)
+				     (0.0)))))
+    crisp (burnt (0.0)
+		 (inOven (crisp (0.9)
+				(soft (0.8)
+				      (0.0)))
+			 (crisp (1.0) 
+				(0.0))))
+    burnt (burnt (1.0)
+		 (inOven (crisp (0.3)
+				(0.0))
+			 (0.0)))
+    customer (customer (0.95)
+                       (0.2))
+endaction
+
+action warmLiquid
+    warmWater (claggy (0.0)
+		     (warmWater (1.0)
+				(water (0.8)
+				       (0.2))))
+endaction
+
+action knead
+    kneaded (kneaded (1.0)
+		     (delivered (0.0)
+				(claggy (0.85)
+				       (0.0))))
+endaction
+
+//The vending machine is only designed to deliver a fully prepared bun.
+action deliverBun
+    delivered (customer (delivered (0.0)
+				   (inOven (0.0)
+					   (burnt (0.2)
+						  (crisp (0.8)
+							 (0.0)))))
+			(0.0))
+    sultanas      (0.0)
+    sugar         (0.0)
+    flour         (0.0)
+    yeast         (0.0)
+    water         (0.0)
+    warmWater     (0.0)
+    milk          (0.0)
+    mixedSpice    (0.0)
+    yeastReaction (0.0)
+    burnt         (0.0)
+    claggy        (0.0)
+    crisp         (0.0)
+    soft          (0.0)
+endaction
+
+%
+--
+// The following actions do not have stochastic effects.
+// After deliver the construct must be discarded before a new one
+// can be made.
+action discardConstruct
+    sultanas      (0.0)
+    sugar         (0.0)
+    flour         (0.0)
+    yeast         (0.0)
+    water         (0.0)
+    warmWater     (0.0)
+    milk          (0.0)
+    mixedSpice    (0.0)
+    yeastReaction (0.0)
+    burnt         (0.0)
+    claggy        (0.0)
+    crisp         (0.0)
+    soft          (0.0)
+    delivered     (0.0)
+endaction
+
+//Only mixture can be put in the oven.
+action putInOven
+    inOven (delivered (0.0) 
+		      (claggy (1.0) (0.0)))
+endaction
+action removeFromOven
+    inOven (0.0)
+endaction
+
+action addDry
+    sugar (sugar (1.0)
+		 (delivered (0.0)
+			    (inOven (0.0) (1.0))))
+    flour (flour (1.0)
+		   (delivered (0.0)
+			      (inOven (0.0) (1.0))))
+    claggy (claggy (1.0)
+		 (delivered (0.0)
+			    (water (inOven (0.0) (1.0))
+				   (0.0))))
+endaction
+action flavour
+    mixedSpice (mixedSpice (1.0)
+			   (delivered (0.0)
+				      (inOven (0.0) (1.0))))
+    sultanas (sultanas (1.0)
+		       (delivered (0.0)
+				  (inOven (0.0) (1.0))))
+endaction
+action addLiquid
+    milk (milk (1.0)
+	       (delivered (0.0)
+			  (inOven (0.0) (1.0))))
+    claggy (claggy (1.0)
+		 (delivered (0.0)
+			    (flour (inOven (0.0) (1.0))
+				   (0.0))))
+    water (water (1.0)
+		 (delivered (0.0)
+			    (inOven (0.0) (1.0))))
+endaction
+action addYeast
+    yeast (yeast (1.0)
+		 (delivered (0.0)
+			    (inOven (0.0) (1.0))))
+endaction
+

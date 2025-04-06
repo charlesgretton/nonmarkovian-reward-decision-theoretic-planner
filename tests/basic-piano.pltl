@@ -1,0 +1,99 @@
+c = tt
+
+[u1,1.0]? ((~c1) snc c) and (prv c) and d
+[u2,1.0]? ((~c1) snc c) and (prv d) and e
+[u3,1.0]? ((~c1) snc c) and (prv e) and f
+[u4,1.0]? ((~c1) snc c) and (prv f) and g
+[u5,1.0]? ((~c1) snc c) and (prv g) and a
+[u6,1.0]? ((~c1) snc c) and (prv a) and b
+[u7,1.0]? ((~(prv c1)) snc c) and (prv b) and c1
+
+[d1,1.0]? ((~c) snc c1) and (prv c1) and b
+[d2,1.0]? ((~c) snc c1) and (prv b) and a
+[d3,1.0]? ((~c) snc c1) and (prv a) and g
+[d4,1.0]? ((~c) snc c1) and (prv g) and f
+[d5,1.0]? ((~c) snc c1) and (prv f) and e
+[d6,1.0]? ((~c) snc c1) and (prv e) and d
+[d7,1.0]? ((~(prv c)) snc c1) and (prv d) and c
+
+
+action a
+    a   (1.0)
+    b   (0.0)
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    c1  (0.0)
+endaction
+action b
+    a   (0.0)
+    b   (1.0)
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    c1  (0.0)
+endaction
+action c
+    a   (0.0)
+    b   (0.0)
+    c   (1.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    c1  (0.0)
+endaction
+action d
+    a   (0.0)
+    b   (0.0)
+    c   (0.0)
+    d   (1.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    c1  (0.0)
+endaction
+action e
+    a   (0.0)
+    b   (0.0)
+    c   (0.0)
+    d   (0.0)
+    e   (1.0)
+    f   (0.0)
+    g   (0.0)
+    c1  (0.0)
+endaction
+action f
+    a   (0.0)
+    b   (0.0)
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (1.0)
+    g   (0.0)
+    c1  (0.0)
+endaction
+action g
+    a   (0.0)
+    b   (0.0)
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (1.0)
+    c1  (0.0)
+endaction
+action c1
+    a   (0.0)
+    b   (0.0)
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    c1  (1.0)
+endaction

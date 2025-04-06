@@ -1,0 +1,8 @@
+loadWorld('piano-without-constraints.pltl')
+PLTLvarExpand
+spudd(0.9,0.1)
+'----- value -----'
+spuddValueToDot
+'----- policy -----'
+spuddPolicyToDot
+quit

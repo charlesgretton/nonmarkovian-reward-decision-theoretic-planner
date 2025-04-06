@@ -1,0 +1,9 @@
+*.dot
+*.eps
+*.toc
+*.ps
+*.aux
+*.dvi
+*.idx
+*.log
+modules.tex

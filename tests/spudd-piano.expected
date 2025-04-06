@@ -1,0 +1,573 @@
+
+
+converged after 50 iterations with deltaMax = 0.00515378
+
+----- value -----
+digraph "Expected value" {
+center = true;
+edge [dir = none];
+n0 [label="c"];
+n0 -> n1;
+n0 -> n2 [style=dashed]
+n1 [label="c1"];
+n1 -> n3;
+n1 -> n4 [style=dashed]
+n3 [label="0.00" shape=box];
+n4 [label="d"];
+n4 -> n3;
+n4 -> n5 [style=dashed]
+n5 [label="e"];
+n5 -> n3;
+n5 -> n6 [style=dashed]
+n6 [label="f"];
+n6 -> n3;
+n6 -> n7 [style=dashed]
+n7 [label="g"];
+n7 -> n3;
+n7 -> n8 [style=dashed]
+n8 [label="a"];
+n8 -> n3;
+n8 -> n9 [style=dashed]
+n9 [label="b"];
+n9 -> n3;
+n9 -> n10 [style=dashed]
+n10 [label="(prv (~c1 snc c))"];
+n10 -> n11;
+n10 -> n12 [style=dashed]
+n11 [label="(prv (~c snc c1))"];
+n11 -> n3;
+n11 -> n13 [style=dashed]
+n13 [label="8.95" shape=box];
+n12 [label="(prv c)"];
+n12 -> n13;
+n12 -> n14 [style=dashed]
+n14 [label="(prv d)"];
+n14 -> n15;
+n14 -> n13 [style=dashed]
+n15 [label="(prv e)"];
+n15 -> n13;
+n15 -> n16 [style=dashed]
+n16 [label="(prv f)"];
+n16 -> n13;
+n16 -> n17 [style=dashed]
+n17 [label="(prv g)"];
+n17 -> n13;
+n17 -> n18 [style=dashed]
+n18 [label="(prv a)"];
+n18 -> n13;
+n18 -> n19 [style=dashed]
+n19 [label="(prv (prv (~c1 snc c)))"];
+n19 -> n13;
+n19 -> n20 [style=dashed]
+n20 [label="(prv b)"];
+n20 -> n13;
+n20 -> n21 [style=dashed]
+n21 [label="(prv (~c snc c1))"];
+n21 -> n22;
+n21 -> n13 [style=dashed]
+n22 [label="(prv c1)"];
+n22 -> n13;
+n22 -> n23 [style=dashed]
+n23 [label="(prv (prv (~c snc c1)))"];
+n23 -> n24;
+n23 -> n13 [style=dashed]
+n24 [label="9.95" shape=box];
+n2 [label="c1"];
+n2 -> n25;
+n2 -> n26 [style=dashed]
+n25 [label="d"];
+n25 -> n3;
+n25 -> n27 [style=dashed]
+n27 [label="e"];
+n27 -> n3;
+n27 -> n28 [style=dashed]
+n28 [label="f"];
+n28 -> n3;
+n28 -> n29 [style=dashed]
+n29 [label="g"];
+n29 -> n3;
+n29 -> n30 [style=dashed]
+n30 [label="a"];
+n30 -> n3;
+n30 -> n31 [style=dashed]
+n31 [label="b"];
+n31 -> n3;
+n31 -> n32 [style=dashed]
+n32 [label="(prv (~c1 snc c))"];
+n32 -> n33;
+n32 -> n34 [style=dashed]
+n33 [label="(prv c)"];
+n33 -> n11;
+n33 -> n35 [style=dashed]
+n35 [label="(prv d)"];
+n35 -> n11;
+n35 -> n36 [style=dashed]
+n36 [label="(prv e)"];
+n36 -> n11;
+n36 -> n37 [style=dashed]
+n37 [label="(prv f)"];
+n37 -> n11;
+n37 -> n38 [style=dashed]
+n38 [label="(prv g)"];
+n38 -> n11;
+n38 -> n39 [style=dashed]
+n39 [label="(prv a)"];
+n39 -> n11;
+n39 -> n40 [style=dashed]
+n40 [label="(prv (prv (~c1 snc c)))"];
+n40 -> n41;
+n40 -> n11 [style=dashed]
+n41 [label="(prv b)"];
+n41 -> n42;
+n41 -> n11 [style=dashed]
+n42 [label="(prv (~c snc c1))"];
+n42 -> n3;
+n42 -> n43 [style=dashed]
+n43 [label="(prv c1)"];
+n43 -> n13;
+n43 -> n44 [style=dashed]
+n44 [label="(prv (prv (~c snc c1)))"];
+n44 -> n13;
+n44 -> n24 [style=dashed]
+n34 [label="(prv (~c snc c1))"];
+n34 -> n13;
+n34 -> n3 [style=dashed]
+n26 [label="d"];
+n26 -> n45;
+n26 -> n46 [style=dashed]
+n45 [label="e"];
+n45 -> n3;
+n45 -> n47 [style=dashed]
+n47 [label="f"];
+n47 -> n3;
+n47 -> n48 [style=dashed]
+n48 [label="g"];
+n48 -> n3;
+n48 -> n49 [style=dashed]
+n49 [label="a"];
+n49 -> n3;
+n49 -> n50 [style=dashed]
+n50 [label="b"];
+n50 -> n3;
+n50 -> n51 [style=dashed]
+n51 [label="(prv (~c1 snc c))"];
+n51 -> n52;
+n51 -> n53 [style=dashed]
+n52 [label="(prv c)"];
+n52 -> n54;
+n52 -> n11 [style=dashed]
+n54 [label="(prv d)"];
+n54 -> n11;
+n54 -> n55 [style=dashed]
+n55 [label="(prv e)"];
+n55 -> n11;
+n55 -> n56 [style=dashed]
+n56 [label="(prv f)"];
+n56 -> n11;
+n56 -> n57 [style=dashed]
+n57 [label="(prv g)"];
+n57 -> n11;
+n57 -> n58 [style=dashed]
+n58 [label="(prv a)"];
+n58 -> n11;
+n58 -> n59 [style=dashed]
+n59 [label="(prv (prv (~c1 snc c)))"];
+n59 -> n60;
+n59 -> n11 [style=dashed]
+n60 [label="(prv b)"];
+n60 -> n11;
+n60 -> n42 [style=dashed]
+n53 [label="(prv c)"];
+n53 -> n34;
+n53 -> n61 [style=dashed]
+n61 [label="(prv d)"];
+n61 -> n34;
+n61 -> n62 [style=dashed]
+n62 [label="(prv e)"];
+n62 -> n63;
+n62 -> n34 [style=dashed]
+n63 [label="(prv f)"];
+n63 -> n34;
+n63 -> n64 [style=dashed]
+n64 [label="(prv g)"];
+n64 -> n34;
+n64 -> n65 [style=dashed]
+n65 [label="(prv a)"];
+n65 -> n34;
+n65 -> n66 [style=dashed]
+n66 [label="(prv (prv (~c1 snc c)))"];
+n66 -> n34;
+n66 -> n67 [style=dashed]
+n67 [label="(prv b)"];
+n67 -> n34;
+n67 -> n68 [style=dashed]
+n68 [label="(prv (~c snc c1))"];
+n68 -> n22;
+n68 -> n3 [style=dashed]
+n46 [label="e"];
+n46 -> n69;
+n46 -> n70 [style=dashed]
+n69 [label="f"];
+n69 -> n3;
+n69 -> n71 [style=dashed]
+n71 [label="g"];
+n71 -> n3;
+n71 -> n72 [style=dashed]
+n72 [label="a"];
+n72 -> n3;
+n72 -> n73 [style=dashed]
+n73 [label="b"];
+n73 -> n3;
+n73 -> n74 [style=dashed]
+n74 [label="(prv (~c1 snc c))"];
+n74 -> n75;
+n74 -> n76 [style=dashed]
+n75 [label="(prv c)"];
+n75 -> n11;
+n75 -> n77 [style=dashed]
+n77 [label="(prv d)"];
+n77 -> n55;
+n77 -> n11 [style=dashed]
+n76 [label="(prv c)"];
+n76 -> n34;
+n76 -> n78 [style=dashed]
+n78 [label="(prv d)"];
+n78 -> n34;
+n78 -> n79 [style=dashed]
+n79 [label="(prv e)"];
+n79 -> n34;
+n79 -> n80 [style=dashed]
+n80 [label="(prv f)"];
+n80 -> n64;
+n80 -> n34 [style=dashed]
+n70 [label="f"];
+n70 -> n81;
+n70 -> n82 [style=dashed]
+n81 [label="g"];
+n81 -> n3;
+n81 -> n83 [style=dashed]
+n83 [label="a"];
+n83 -> n3;
+n83 -> n84 [style=dashed]
+n84 [label="b"];
+n84 -> n3;
+n84 -> n85 [style=dashed]
+n85 [label="(prv (~c1 snc c))"];
+n85 -> n86;
+n85 -> n87 [style=dashed]
+n86 [label="(prv c)"];
+n86 -> n11;
+n86 -> n88 [style=dashed]
+n88 [label="(prv d)"];
+n88 -> n11;
+n88 -> n89 [style=dashed]
+n89 [label="(prv e)"];
+n89 -> n56;
+n89 -> n11 [style=dashed]
+n87 [label="(prv c)"];
+n87 -> n34;
+n87 -> n90 [style=dashed]
+n90 [label="(prv d)"];
+n90 -> n34;
+n90 -> n91 [style=dashed]
+n91 [label="(prv e)"];
+n91 -> n34;
+n91 -> n92 [style=dashed]
+n92 [label="(prv f)"];
+n92 -> n34;
+n92 -> n93 [style=dashed]
+n93 [label="(prv g)"];
+n93 -> n65;
+n93 -> n34 [style=dashed]
+n82 [label="g"];
+n82 -> n94;
+n82 -> n95 [style=dashed]
+n94 [label="a"];
+n94 -> n3;
+n94 -> n96 [style=dashed]
+n96 [label="b"];
+n96 -> n3;
+n96 -> n97 [style=dashed]
+n97 [label="(prv (~c1 snc c))"];
+n97 -> n98;
+n97 -> n99 [style=dashed]
+n98 [label="(prv c)"];
+n98 -> n11;
+n98 -> n100 [style=dashed]
+n100 [label="(prv d)"];
+n100 -> n11;
+n100 -> n101 [style=dashed]
+n101 [label="(prv e)"];
+n101 -> n11;
+n101 -> n102 [style=dashed]
+n102 [label="(prv f)"];
+n102 -> n57;
+n102 -> n11 [style=dashed]
+n99 [label="(prv c)"];
+n99 -> n34;
+n99 -> n103 [style=dashed]
+n103 [label="(prv d)"];
+n103 -> n34;
+n103 -> n104 [style=dashed]
+n104 [label="(prv e)"];
+n104 -> n34;
+n104 -> n105 [style=dashed]
+n105 [label="(prv f)"];
+n105 -> n34;
+n105 -> n106 [style=dashed]
+n106 [label="(prv g)"];
+n106 -> n34;
+n106 -> n107 [style=dashed]
+n107 [label="(prv a)"];
+n107 -> n66;
+n107 -> n34 [style=dashed]
+n95 [label="a"];
+n95 -> n108;
+n95 -> n109 [style=dashed]
+n108 [label="b"];
+n108 -> n3;
+n108 -> n110 [style=dashed]
+n110 [label="(prv (~c1 snc c))"];
+n110 -> n111;
+n110 -> n112 [style=dashed]
+n111 [label="(prv c)"];
+n111 -> n11;
+n111 -> n113 [style=dashed]
+n113 [label="(prv d)"];
+n113 -> n11;
+n113 -> n114 [style=dashed]
+n114 [label="(prv e)"];
+n114 -> n11;
+n114 -> n115 [style=dashed]
+n115 [label="(prv f)"];
+n115 -> n11;
+n115 -> n116 [style=dashed]
+n116 [label="(prv g)"];
+n116 -> n58;
+n116 -> n11 [style=dashed]
+n112 [label="(prv c)"];
+n112 -> n34;
+n112 -> n117 [style=dashed]
+n117 [label="(prv d)"];
+n117 -> n34;
+n117 -> n118 [style=dashed]
+n118 [label="(prv e)"];
+n118 -> n34;
+n118 -> n119 [style=dashed]
+n119 [label="(prv f)"];
+n119 -> n34;
+n119 -> n120 [style=dashed]
+n120 [label="(prv g)"];
+n120 -> n34;
+n120 -> n121 [style=dashed]
+n121 [label="(prv a)"];
+n121 -> n34;
+n121 -> n122 [style=dashed]
+n122 [label="(prv (prv (~c1 snc c)))"];
+n122 -> n34;
+n122 -> n123 [style=dashed]
+n123 [label="(prv b)"];
+n123 -> n68;
+n123 -> n34 [style=dashed]
+n109 [label="b"];
+n109 -> n124;
+n109 -> n3 [style=dashed]
+n124 [label="(prv (~c1 snc c))"];
+n124 -> n125;
+n124 -> n126 [style=dashed]
+n125 [label="(prv c)"];
+n125 -> n11;
+n125 -> n127 [style=dashed]
+n127 [label="(prv d)"];
+n127 -> n11;
+n127 -> n128 [style=dashed]
+n128 [label="(prv e)"];
+n128 -> n11;
+n128 -> n129 [style=dashed]
+n129 [label="(prv f)"];
+n129 -> n11;
+n129 -> n130 [style=dashed]
+n130 [label="(prv g)"];
+n130 -> n11;
+n130 -> n131 [style=dashed]
+n131 [label="(prv a)"];
+n131 -> n59;
+n131 -> n11 [style=dashed]
+n126 [label="(prv c)"];
+n126 -> n34;
+n126 -> n132 [style=dashed]
+n132 [label="(prv d)"];
+n132 -> n34;
+n132 -> n133 [style=dashed]
+n133 [label="(prv e)"];
+n133 -> n34;
+n133 -> n134 [style=dashed]
+n134 [label="(prv f)"];
+n134 -> n34;
+n134 -> n135 [style=dashed]
+n135 [label="(prv g)"];
+n135 -> n34;
+n135 -> n136 [style=dashed]
+n136 [label="(prv a)"];
+n136 -> n34;
+n136 -> n137 [style=dashed]
+n137 [label="(prv (prv (~c1 snc c)))"];
+n137 -> n34;
+n137 -> n138 [style=dashed]
+n138 [label="(prv b)"];
+n138 -> n34;
+n138 -> n139 [style=dashed]
+n139 [label="(prv (~c snc c1))"];
+n139 -> n140;
+n139 -> n3 [style=dashed]
+n140 [label="(prv c1)"];
+n140 -> n23;
+n140 -> n13 [style=dashed]
+}
+
+----- policy -----
+digraph "Optimal policy" {
+center = true;
+edge [dir = none];
+n0 [label="c"];
+n0 -> n1;
+n0 -> n2 [style=dashed]
+n1 [label="c1"];
+n1 -> n3 [style=dashed]
+n3 [label="d"];
+n3 -> n5 [style=dashed]
+n5 [label="e"];
+n5 -> n6 [style=dashed]
+n6 [label="f"];
+n6 -> n7 [style=dashed]
+n7 [label="g"];
+n7 -> n8 [style=dashed]
+n8 [label="a"];
+n8 -> n9 [style=dashed]
+n9 [label="b"];
+n9 -> n10 [style=dashed]
+n10 [label="(prv (~c1 snc c))"];
+n10 -> n11;
+n10 -> n12 [style=dashed]
+n11 [label="(prv (~c snc c1))"];
+n11 -> n12 [style=dashed]
+n12 [label="d" shape=box];
+n2 [label="c1"];
+n2 -> n13;
+n2 -> n14 [style=dashed]
+n13 [label="d"];
+n13 -> n15 [style=dashed]
+n15 [label="e"];
+n15 -> n16 [style=dashed]
+n16 [label="f"];
+n16 -> n17 [style=dashed]
+n17 [label="g"];
+n17 -> n18 [style=dashed]
+n18 [label="a"];
+n18 -> n19 [style=dashed]
+n19 [label="b"];
+n19 -> n20 [style=dashed]
+n20 [label="(prv (~c1 snc c))"];
+n20 -> n21;
+n20 -> n22 [style=dashed]
+n21 [label="(prv (~c snc c1))"];
+n21 -> n23 [style=dashed]
+n23 [label="b" shape=box];
+n22 [label="(prv (~c snc c1))"];
+n22 -> n23;
+n14 [label="d"];
+n14 -> n24;
+n14 -> n25 [style=dashed]
+n24 [label="e"];
+n24 -> n26 [style=dashed]
+n26 [label="f"];
+n26 -> n27 [style=dashed]
+n27 [label="g"];
+n27 -> n28 [style=dashed]
+n28 [label="a"];
+n28 -> n29 [style=dashed]
+n29 [label="b"];
+n29 -> n30 [style=dashed]
+n30 [label="(prv (~c1 snc c))"];
+n30 -> n31;
+n30 -> n32 [style=dashed]
+n31 [label="(prv (~c snc c1))"];
+n31 -> n33 [style=dashed]
+n33 [label="e" shape=box];
+n32 [label="(prv (~c snc c1))"];
+n32 -> n34;
+n34 [label="c" shape=box];
+n25 [label="e"];
+n25 -> n35;
+n25 -> n36 [style=dashed]
+n35 [label="f"];
+n35 -> n37 [style=dashed]
+n37 [label="g"];
+n37 -> n38 [style=dashed]
+n38 [label="a"];
+n38 -> n39 [style=dashed]
+n39 [label="b"];
+n39 -> n40 [style=dashed]
+n40 [label="(prv (~c1 snc c))"];
+n40 -> n41;
+n40 -> n42 [style=dashed]
+n41 [label="(prv (~c snc c1))"];
+n41 -> n43 [style=dashed]
+n43 [label="f" shape=box];
+n42 [label="(prv (~c snc c1))"];
+n42 -> n12;
+n36 [label="f"];
+n36 -> n44;
+n36 -> n45 [style=dashed]
+n44 [label="g"];
+n44 -> n46 [style=dashed]
+n46 [label="a"];
+n46 -> n47 [style=dashed]
+n47 [label="b"];
+n47 -> n48 [style=dashed]
+n48 [label="(prv (~c1 snc c))"];
+n48 -> n49;
+n48 -> n50 [style=dashed]
+n49 [label="(prv (~c snc c1))"];
+n49 -> n51 [style=dashed]
+n51 [label="g" shape=box];
+n50 [label="(prv (~c snc c1))"];
+n50 -> n33;
+n45 [label="g"];
+n45 -> n52;
+n45 -> n53 [style=dashed]
+n52 [label="a"];
+n52 -> n54 [style=dashed]
+n54 [label="b"];
+n54 -> n55 [style=dashed]
+n55 [label="(prv (~c1 snc c))"];
+n55 -> n56;
+n55 -> n57 [style=dashed]
+n56 [label="(prv (~c snc c1))"];
+n56 -> n58 [style=dashed]
+n58 [label="a" shape=box];
+n57 [label="(prv (~c snc c1))"];
+n57 -> n43;
+n53 [label="a"];
+n53 -> n59;
+n53 -> n60 [style=dashed]
+n59 [label="b"];
+n59 -> n61 [style=dashed]
+n61 [label="(prv (~c1 snc c))"];
+n61 -> n21;
+n61 -> n62 [style=dashed]
+n62 [label="(prv (~c snc c1))"];
+n62 -> n51;
+n60 [label="b"];
+n60 -> n63;
+n63 [label="(prv (~c1 snc c))"];
+n63 -> n64;
+n63 -> n65 [style=dashed]
+n64 [label="(prv (~c snc c1))"];
+n64 -> n66 [style=dashed]
+n66 [label="c1" shape=box];
+n65 [label="(prv (~c snc c1))"];
+n65 -> n58;
+}
+
+

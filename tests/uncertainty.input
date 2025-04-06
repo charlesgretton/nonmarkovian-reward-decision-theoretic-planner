@@ -1,0 +1,3 @@
+loadWorld("uncertainty.pltl")
+constraintToDot
+quit

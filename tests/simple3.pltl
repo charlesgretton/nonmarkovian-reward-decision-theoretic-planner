@@ -1,0 +1,9 @@
+//PLTL equivalent of domain in _simple3.fltl_
+[simple3,1.0]? (prv and < 4(P)) and Q
+
+action NA
+        Q       (Q      (0.50)
+                        (0.50))
+        P       (P      (0.50)
+                        (0.50))
+endaction

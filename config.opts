@@ -1,0 +1,12 @@
+--cudd-path
+/usr/local/cudd-2.3.1
+--flex-path
+/usr/
+--mtl-path
+/usr/local/mtl-2.1.2-21/
+--optimise
+--cpu
+pentium4
+--sse
+--align-double
+--sse2

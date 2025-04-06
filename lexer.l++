@@ -1,0 +1,87 @@
+/*
+ * \paragraph{:Purpose:}
+ *
+ * Lexing support for the \module{parser}.
+ **/
+
+%{
+   #include<cstring>
+   #include<iostream>
+   #include <cstdio>
+
+   #include"formula.h++"
+   #include"domainSpecification.h++"
+
+   #include "parser.h++"
+   #include "preprocessor.h++"
+
+   using namespace std;
+   
+   extern YYLTYPE yylloc;
+       
+   #ifdef LEXER_DEBUG
+   #    define DEBUG_OUT(x) cout << x << endl;
+   #else
+   #    define DEBUG_OUT(x)
+   #endif
+   
+%}
+
+DIGIT [0-9]
+
+ID [a-zA-Z0-9_]
+
+SPACE [\n\t ]
+%option yylineno
+%%
+
+"action" {yylloc.last_line = yylineno; return ACTION;}
+"endaction" {yylloc.last_line = yylineno; return ENDACTION;}
+
+"imp" {yylloc.last_line = yylineno; return IMP;}
+"prv" {yylloc.last_line = yylineno; return PRV;}
+"pbx" {yylloc.last_line = yylineno; return PBX;}
+"pdi" {yylloc.last_line = yylineno; return PDI;}
+"nxt" {yylloc.last_line = yylineno; return NXT;}
+"fbx" {yylloc.last_line = yylineno; return FBX;}
+\~ {yylloc.last_line = yylineno; return NOT;}
+"->" {yylloc.last_line = yylineno; return IMP;}
+"<->" {yylloc.last_line = yylineno; return IFF;}
+"and" {yylloc.last_line = yylineno; return AND;}
+"or" {yylloc.last_line = yylineno; return OR;}
+"fut" {yylloc.last_line = yylineno; return FUT;}
+"snc" {yylloc.last_line = yylineno; return SNC;}
+
+"tt" {yylloc.last_line = yylineno; yylval.boolean_1 = true; return BOOL;}
+"ff" {yylloc.last_line = yylineno; yylval.boolean_1 = false; return BOOL;}
+
+{DIGIT}+  {yylloc.last_line = yylineno; 
+           yylval.int_1 = atoi(yytext); return INT; }
+
+{DIGIT}+"."{DIGIT}+  {yylloc.last_line = yylineno; 
+          yylval.double_1 = atof(yytext); return NUM; }
+
+{ID}+ {yylloc.last_line = yylineno; yylval.string_1 = strdup(yytext); DEBUG_OUT("scanID");return ID;}
+
+{SPACE}+ {}
+
+<<EOF>>   yyterminate();  /* signal end of dialogue */
+
+.         return yytext[0];
+
+%%
+
+void lexerSetInput(FILE *file)
+{
+    FILE *ppFile;
+    ppFile = preprocessFrom(file);
+    YY_BUFFER_STATE flexBuffer = yy_create_buffer(ppFile, 1024);
+    yy_switch_to_buffer(flexBuffer);
+}
+
+// used to suppress a warning
+static void dummy()
+{
+    yyunput(0, 0);
+    dummy();
+}

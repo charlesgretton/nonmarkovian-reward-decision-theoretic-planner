@@ -1,0 +1,10 @@
+//This reward element specifies that if propositions $P$ and $Q$ are
+//true in the third state reward is allocated.
+[simple1,1.0]? (nxt ^ 3 ((P and Q) -> $) )
+
+action NA
+        Q       (Q      (0.50)
+                        (0.50))
+        P       (P      (0.50)
+                        (0.50))
+endaction

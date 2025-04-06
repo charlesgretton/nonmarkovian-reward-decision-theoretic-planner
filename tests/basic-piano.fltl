@@ -1,0 +1,99 @@
+c = tt
+
+[u1,1.0]? fbx ( c -> ( ((c and (nxt d)) -> nxt($)) fut c1 ) )
+[u2,1.0]? fbx ( c -> ( ((d and (nxt e)) -> nxt($)) fut c1 ) )
+[u3,1.0]? fbx ( c -> ( ((e and (nxt f)) -> nxt($)) fut c1 ) )
+[u4,1.0]? fbx ( c -> ( ((f and (nxt g)) -> nxt($)) fut c1 ) )
+[u5,1.0]? fbx ( c -> ( ((g and (nxt a)) -> nxt($)) fut c1 ) )
+[u6,1.0]? fbx ( c -> ( ((a and (nxt b)) -> nxt($)) fut c1 ) )
+[u7,1.0]? fbx ( c -> ( ((b and (nxt c1)) -> nxt($)) fut c1 ) )
+
+[d1,1.0]? fbx ( c1 -> ( ((c1 and (nxt b)) -> nxt($)) fut c ) )
+[d2,1.0]? fbx ( c1 -> ( ((b and (nxt a)) -> nxt($)) fut c ) )
+[d3,1.0]? fbx ( c1 -> ( ((a and (nxt g)) -> nxt($)) fut c ) )
+[d4,1.0]? fbx ( c1 -> ( ((g and (nxt f)) -> nxt($)) fut c ) )
+[d5,1.0]? fbx ( c1 -> ( ((f and (nxt e)) -> nxt($)) fut c ) )
+[d6,1.0]? fbx ( c1 -> ( ((e and (nxt d)) -> nxt($)) fut c ) )
+[d7,1.0]? fbx ( c1 -> ( ((d and (nxt c)) -> nxt($)) fut c ) )
+
+
+action a
+    a   (1.0)
+    b   (0.0)
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    c1  (0.0)
+endaction
+action b
+    a   (0.0)
+    b   (1.0)
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    c1  (0.0)
+endaction
+action c
+    a   (0.0)
+    b   (0.0)
+    c   (1.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    c1  (0.0)
+endaction
+action d
+    a   (0.0)
+    b   (0.0)
+    c   (0.0)
+    d   (1.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    c1  (0.0)
+endaction
+action e
+    a   (0.0)
+    b   (0.0)
+    c   (0.0)
+    d   (0.0)
+    e   (1.0)
+    f   (0.0)
+    g   (0.0)
+    c1  (0.0)
+endaction
+action f
+    a   (0.0)
+    b   (0.0)
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (1.0)
+    g   (0.0)
+    c1  (0.0)
+endaction
+action g
+    a   (0.0)
+    b   (0.0)
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (1.0)
+    c1  (0.0)
+endaction
+action c1
+    a   (0.0)
+    b   (0.0)
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    c1  (1.0)
+endaction

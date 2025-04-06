@@ -1,0 +1,232 @@
+#!/usr/bin/ruby -w
+
+indent_size = 4
+
+$cpp_lnum = 0
+$hpp_lnum = 1
+$last_source = 0
+$redirect_errors = false
+$class_indent = ''
+$cpp_extension = 'c++'
+$hpp_extension = 'h++'
+
+ARGV.each do | arg |
+    if arg == '--redirect-errors'
+	$redirect_errors = true
+    elsif arg =~ /--cpp-extension=(.*)$/
+	$cpp_extension = $1
+    elsif arg =~ /--hpp-extension=(.*)$/
+	$hpp_extension = $1
+    else
+	$cppname = arg
+    end
+end
+
+$cppname =~ /^(.*)\./
+$hppname = "#{$1}." + $hpp_extension
+
+$hpp = $stdout
+
+def hpp_write(line, source = nil)
+    if $redirect_errors
+	lc = line.count("\n")
+	if source.nil?
+	    if !$last_source.nil?
+		$hpp.print "#line #{$hpp_lnum + 1} \"#{$hppname}\"\n"
+		$hpp_lnum += 1
+	    end
+	    $last_source = nil
+	else
+	    if $last_source != source and source != 0
+		$hpp.print "#line #{source} \"#{$cppname}\"\n"
+		$hpp_lnum += 1
+	    end
+	    $last_source = source + lc
+	end
+	$hpp_lnum += lc
+    end
+    $hpp.print line
+end
+
+def set_default(line)
+    line.gsub(/DEFVAL\(([^\)]+)\)/, '= \1')
+end
+
+def write_hpp_header
+    hpp_write <<EOF
+#ifndef #{$hppname.gsub(/\./, '_').gsub(/\+/, 'p').upcase}
+#define #{$hppname.gsub(/\./, '_').gsub(/\+/, 'p').upcase}
+
+EOF
+end
+
+cpp = open($cppname)
+
+trailer = Array.new
+
+stage = 'looking for initial comment'
+
+$end_class_lnum = nil
+$num_hash_ifs = 0
+
+cpp.each_line do | line |
+    $cpp_lnum += 1
+
+    # $stderr.printf("%-14s:%s", stage, line)
+
+    if 'looking for initial comment' == stage
+	while (line =~ /^\/\// or line =~ /^ *$/)
+	    line = cpp.readline
+	    $cpp_lnum += 1
+	end
+
+	if line =~ /^\/\*/
+	    stage = 'reading initial comment'
+	else
+	    $stderr.puts "#{$cppname}:#{$cpp_lnum}: warning - missing header comment"
+	    stage = 'writing hpp header'
+	end
+    end
+
+    if 'writing hpp header' == stage
+	write_hpp_header
+	stage = 'looking for #ifdef'
+    end
+    
+    case stage
+    when 'reading initial comment'
+	hpp_write(line.gsub($cppname.gsub(/\+/, '.'), $hppname), $cpp_lnum)
+	if line =~ /(.*)\*\//
+	    stage = 'writing hpp header'
+	end
+	
+    when 'looking for #ifdef'
+	if line =~ /^\#ifdef HEADER$/
+	    stage = 'looking for start of class'
+	end
+
+    when 'looking for start of class'
+	if line =~ /^( *)class/
+	    hpp_write(line, $cpp_lnum)
+	    $class_indent = $1
+	    stage = 'looking for end of class'
+	else
+	    if line =~ /^\#endif$/
+		break
+	    else
+		hpp_write(line, $cpp_lnum)
+	    end
+	end
+
+    when 'looking for end of class'
+	if line =~ /^#{$class_indent}\};$/
+	    trailer.push line
+	    $end_class_lnum = $cpp_lnum
+	    stage = 'looking for #endif'
+	else
+	    if line =~ /^\#endif$/
+		break
+	    else
+		hpp_write(line, $cpp_lnum)
+	    end
+	end
+	
+    when 'looking for #endif'
+	if line =~ /^\#endif$/
+	    stage = 'scanning main part of file'
+	    
+	    $comment = ""
+	    $comment_active = false
+
+	    $access = nil
+	    $prefixes = ''
+
+	else
+	    trailer.push line
+	end
+	
+    when 'scanning main part of file'
+	if line =~ /^\/\/ *(public|private|protected|noexport) *(: *(.*))?$/
+	    if $1 != $access
+		$access = $1
+		hpp_write "\n#{$class_indent}#{$access}:\n" if $access != 'noexport'
+	    end
+	    $prefixes = ''
+	    if !$3.nil?
+		$prefixes = $3 + ' '
+	    end
+	end
+	cut_len = 0
+
+	while line =~ /([A-Z]+) /
+	    if $1 == "PUBLIC" || $1 == "PRIVATE" || $1 == "PROTECTED"
+		new_access = $1.downcase
+		if new_access != $access
+		    $access = new_access
+		    hpp_write "\n#{$class_indent}#{$access}:\n"
+		end
+		
+		$access = $1.downcase
+		$prefixes = ''
+	    elsif $1 == "VIRTUAL" || $1 == "STATIC" || $1 == "MUTABLE" || $1 == "VOLATILE"
+		$prefixes += $1.downcase + ' '
+	    else
+		break
+	    end
+	    cut_len += $1.length + 1
+	    line.gsub!(/#{$1} /, '')
+	end
+	
+	if line =~ /^ *\/\*/
+	    $comment = ' ' * indent_size + line
+	    $comment_active = line !~ /\*\//
+	elsif line =~ /\*\//
+	    $comment += ' ' * indent_size + line
+	    $comment_active = false
+	elsif line =~ /^ *template/ && $access != 'noexport'
+	    hpp_write($comment, $cpp_lnum - $comment.count("\n"))
+	    hpp_write(' ' * indent_size + line, $cpp_lnum)
+	    $comment = ''
+	elsif line =~ /^[a-zA-Z].*?::.*([\(=])/ && $access != 'noexport'
+	    type = $1
+	    line.chomp!
+	    hpp_write($comment, $cpp_lnum - $comment.count("\n"))
+	    line.sub!(/( ?)([a-zA-Z][^ ]+?::)/, '\1')
+	    cut_len = $2.length
+	    line.gsub!(/ *=.*;$/, '')
+	    hpp_write(" " * indent_size + $class_indent + $prefixes + set_default(line), $cpp_lnum)
+	    if type == '('
+		cpp.each_line do | line |
+		    $cpp_lnum += 1
+		    line.chomp!
+		    if line =~ /^\{/ || line =~ /^ *:/
+			break
+		    end
+		    hpp_write("\n" + (" " * (indent_size + $prefixes.length) + $class_indent + set_default(line)).gsub(/^ {#{cut_len}}/, ''), 0)
+		end
+	    end
+	    hpp_write(';', 0)
+	    $comment = ''
+	    hpp_write("\n", 0)
+	elsif $comment_active
+	    $comment += ' ' * indent_size + line
+	else
+	    $comment = ''
+	end
+    else
+	$stderr.puts "unknown internal mode \"#{stage}\""
+	exit 1
+    end
+end
+
+if $end_class_lnum
+    hpp_write('', $end_class_lnum)
+    trailer.each do | line |
+	hpp_write(line + "\n", 0)
+    end
+end
+
+cpp.close
+
+hpp_write "#endif\n"
+

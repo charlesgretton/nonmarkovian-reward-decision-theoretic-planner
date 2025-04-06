@@ -1,0 +1,137 @@
+%{
+    #include "CommandInterpreter.h++"
+    #include "Registry.h++"
+    #include <iostream>
+    #include <string>
+	#include <sstream>
+    #include <map>
+    using namespace std;
+
+    void yyerror(char *m)
+    {
+        CommandInterpreter::getInstance()->reportError(m);
+    }
+
+    #define CMDPARSER_DBG(x)
+    //#define CMDPARSER_DBG(x) cout << "parsed " << x << endl;
+
+    int yylex();
+%}
+%union {
+    string *str;
+    vector<string> *arglist;
+}
+
+%token <str> KEYWORD STRING HELP
+%type <str> exp session
+%type <arglist> arglist
+%start session
+
+%left '(' ')'
+
+%%
+
+session
+    : {}
+    | session line {CMDPARSER_DBG("line");}
+;
+
+line
+    : '\n' {}
+    | exp '\n' {
+        cout << *$1 << endl;
+        delete $1;
+    }
+    | exp '>' exp '\n' {
+        CommandInterpreter::getInstance()->output(*$3, *$1, false);
+        delete $3;
+        delete $1;
+        CMDPARSER_DBG("redirection");
+    }
+    | exp '|' exp '\n' {
+        CommandInterpreter::getInstance()->shell(*$3, *$1);
+        delete $3;
+        delete $1;
+        CMDPARSER_DBG("pipe");
+    }
+    | exp '>' '>' exp '\n' {
+        CommandInterpreter::getInstance()->output(*$4, *$1, true);
+        delete $4;
+        delete $1;
+        CMDPARSER_DBG("append redirection");
+    }
+    | assignment '\n' {}
+    | error {CMDPARSER_DBG("error");}
+;
+
+exp
+    : STRING {
+        $$ = $1;
+        CMDPARSER_DBG("string");
+    }
+    | KEYWORD {
+         $$ = new string(Registry::getInstance()->evaluate(*$1, vector<string>()));
+         delete $1;
+         CMDPARSER_DBG("keyword");
+    }
+    | KEYWORD '(' arglist ')' {
+        $$ = new string(Registry::getInstance()->evaluate(*$1, *$3));
+        delete $1;
+        delete $3;
+        CMDPARSER_DBG("keyword(args)");
+    }
+    | exp exp {
+        $$ = new string(*$1 + *$2);
+        delete $1;
+        delete $2;
+        CMDPARSER_DBG("string concatenation");
+    }
+    | HELP KEYWORD {
+        vector<string> tmp;
+        tmp.push_back(*$2);
+        ostringstream help;
+        help << Registry::getInstance()->evaluate("help", tmp);
+        $$ = new string(help.str());
+        delete $2;
+        CMDPARSER_DBG("help request");
+    }
+    | HELP HELP {
+        vector<string> tmp;
+        tmp.push_back("help");
+        ostringstream help;
+        help << Registry::getInstance()->evaluate("help", tmp);
+        $$ = new string(help.str());
+        CMDPARSER_DBG("help request");
+    }
+    | HELP {
+        ostringstream help;
+        help << Registry::getInstance()->helpSummary();
+        $$ = new string(help.str());
+        CMDPARSER_DBG("help request");
+    }
+;
+
+arglist
+    : exp {
+        $$ = new vector<string>;
+        $$->push_back(*$1);
+        delete $1;
+    }
+    | arglist ',' exp {
+        $$ = new vector<string>(*$1);
+        $$->push_back(*$3);
+        delete $1;
+        delete $3;
+    }
+;
+
+assignment
+    : KEYWORD '=' exp {
+        Registry::getInstance()->setString(*$1, *$3);
+        delete $1;
+        delete $3;
+        CMDPARSER_DBG("assignment");
+    }
+;
+
+%%

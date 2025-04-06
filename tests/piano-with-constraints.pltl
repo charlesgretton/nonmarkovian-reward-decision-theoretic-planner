@@ -1,0 +1,131 @@
+[cns1]?
+  a or b or c or d or e or f or g or c1
+
+[cns2]?
+  ~(a and (b or c or d or e or f or g or c1))
+
+[cns3]?
+  ~(b and (c or d or e or f or g or c1))
+
+[cns4]?
+  ~(c and (d or e or f or g or c1))
+
+[cns5]?
+  ~(d and (e or f or g or c1))
+
+[cns6]?
+  ~(e and (f or g or c1))
+
+[cns7]?
+  ~(f and (g or c1))
+
+[cns8]?
+  ~(g and (c1))
+
+[cns9]?
+  ~(((~c1) snc c) and ((~c) snc c1))
+
+[cns10]?
+  c or ((~c1) snc c) or ((~c) snc c1)
+
+[u1,1.0]?
+ (((~c1) snc c) and (
+   ((prv c) and d) or
+   ((prv d) and e) or
+   ((prv e) and f) or
+   ((prv f) and g) or
+   ((prv g) and a) or
+   ((prv a) and b)
+ )) or
+ ((prv ((~c1) snc c)) and prv b and c1) or
+
+ (((~c) snc c1) and (
+   ((prv c1) and b) or
+   ((prv b) and a) or
+   ((prv a) and g) or
+   ((prv g) and f) or
+   ((prv f) and e) or
+   ((prv e) and d)
+ )) or
+ ((prv ((~c) snc c1)) and (prv d) and c)
+
+action a
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    a   (1.0)
+    b   (0.0)
+    c1  (0.0)
+endaction
+action b
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    a   (0.0)
+    b   (1.0)
+    c1  (0.0)
+endaction
+action c
+    c   (1.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    a   (0.0)
+    b   (0.0)
+    c1  (0.0)
+endaction
+action d
+    c   (0.0)
+    d   (1.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    a   (0.0)
+    b   (0.0)
+    c1  (0.0)
+endaction
+action e
+    c   (0.0)
+    d   (0.0)
+    e   (1.0)
+    f   (0.0)
+    g   (0.0)
+    a   (0.0)
+    b   (0.0)
+    c1  (0.0)
+endaction
+action f
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (1.0)
+    g   (0.0)
+    a   (0.0)
+    b   (0.0)
+    c1  (0.0)
+endaction
+action g
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (1.0)
+    a   (0.0)
+    b   (0.0)
+    c1  (0.0)
+endaction
+action c1
+    c   (0.0)
+    d   (0.0)
+    e   (0.0)
+    f   (0.0)
+    g   (0.0)
+    a   (0.0)
+    b   (0.0)
+    c1  (1.0)
+endaction

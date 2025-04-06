@@ -1,0 +1,13 @@
+#!/bin/sh
+TMP_DIR=sloc_tmp
+
+rm -rf $TMP_DIR
+mkdir $TMP_DIR
+(
+    cd sloc_tmp
+    ln -s ../*.?++ ../Makefile .
+    rename 's/l\+\+/l/' *.l++
+    rename 's/y\+\+/y/' *.y++
+    rename 's/\+\+/pp/' *.?++
+)
+sloccount --follow $TMP_DIR

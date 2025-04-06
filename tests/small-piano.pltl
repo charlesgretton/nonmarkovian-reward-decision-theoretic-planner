@@ -1,0 +1,28 @@
+c = tt
+
+[u1,1.0]?
+ (((~e) snc c) and (
+   ((prv c) and d)
+ )) or
+ ((prv ((~e) snc c)) and prv d and e) or
+
+ (((~c) snc e) and (
+   ((prv e) and d)
+ )) or
+ ((prv ((~c) snc e)) and (prv d) and c)
+
+action c
+    c   (1.0)
+    d   (0.0)
+    e   (0.0)
+endaction
+action d
+    c   (0.0)
+    d   (1.0)
+    e   (0.0)
+endaction
+action e
+    c   (0.0)
+    d   (0.0)
+    e   (1.0)
+endaction

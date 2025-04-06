@@ -1,0 +1,10 @@
+//This reward element says to reward all states that occur $3$ states
+//after propositions $P$ and $Q$ are true.
+[simple5,1.0]? prv ^ 3 (P and Q)
+
+action NA
+        Q       (Q      (0.50)
+                        (0.50))
+        P       (P      (0.50)
+                        (0.50))
+endaction

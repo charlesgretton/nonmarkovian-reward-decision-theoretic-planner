@@ -1,0 +1,523 @@
+// ploticus data display engine.  Software, documentation, and examples.  
+// Copyright 1998-2002 Stephen C. Grubb  (scg@jax.org).
+// Covered by GPL; see the file 'Copyright' for details. 
+// http://ploticus.sourceforge.net
+
+//// LINES - do line graph 
+
+
+//// load lines-specific parameters..
+#setifnotgiven cats = ""
+
+#setifnotgiven errcolor = black
+#setifnotgiven errwidth = 0.08
+#setifnotgiven errthick = 0.5
+
+#setifnotgiven y2 = ""
+#setifnotgiven y3 = ""
+#setifnotgiven y4 = ""
+#setifnotgiven y5 = ""
+#setifnotgiven y6 = ""
+#setifnotgiven y7 = ""
+#setifnotgiven y8 = ""
+#setifnotgiven y9 = ""
+
+#setifnotgiven err2 = ""
+#setifnotgiven err3 = ""
+#setifnotgiven err4 = ""
+#setifnotgiven err5 = ""
+#setifnotgiven err6 = ""
+#setifnotgiven err7 = ""
+#setifnotgiven err8 = ""
+#setifnotgiven err9 = ""
+
+#setifnotgiven name = "#usefname"
+#setifnotgiven name2 = "#usefname"
+#setifnotgiven name3 = "#usefname"
+#setifnotgiven name4 = "#usefname"
+#setifnotgiven name5 = "#usefname"
+#setifnotgiven name6 = "#usefname"
+#setifnotgiven name7 = "#usefname"
+#setifnotgiven name8 = "#usefname"
+#setifnotgiven name9 = "#usefname"
+
+#setifnotgiven linedet = "color=red"
+#setifnotgiven linedet2 = "color=darkblue"
+#setifnotgiven linedet3 = "color=teal"
+#setifnotgiven linedet4 = "color=orange"
+#setifnotgiven linedet5 = "color=black"
+#setifnotgiven linedet6 = "color=magenta"
+#setifnotgiven linedet7 = "color=purple"
+#setifnotgiven linedet8 = "color=powderblue"
+#setifnotgiven linedet9 = "color=brightgreen"
+
+#setifnotgiven pointsym = "shape=square style=outline fillcolor=white"
+#setifnotgiven pointsym2 = "shape=triangle style=outline fillcolor=white"
+#setifnotgiven pointsym3 = "shape=diamond style=outline fillcolor=white"
+#setifnotgiven pointsym4 = "shape=downtriangle style=outline fillcolor=white"
+#setifnotgiven pointsym5 = "shape=pentagon style=outline fillcolor=white"
+#setifnotgiven pointsym6 = "shape=nicecircle style=outline fillcolor=white"
+#setifnotgiven pointsym7 = "shape=triangle style=filled fillcolor=purple"
+#setifnotgiven pointsym8 = "shape=downtriangle style=filled fillcolor=powderblue"
+#setifnotgiven pointsym9 = "shape=circle style=spokes fillcolor=brightgreen"
+
+#setifnotgiven fill = ""
+#setifnotgiven fill2 = ""
+#setifnotgiven fill3 = ""
+#setifnotgiven fill4 = ""
+#setifnotgiven fill5 = ""
+#setifnotgiven fill6 = ""
+#setifnotgiven fill7 = ""
+#setifnotgiven fill8 = ""
+#setifnotgiven fill9 = ""
+
+#setifnotgiven step = ""
+#setifnotgiven gapmissing = ""
+#setifnotgiven legend = "min+0.5 min-0.5"
+
+
+//// load standard parameters..
+#include $chunk_setstd
+
+
+//// read data..
+#include $chunk_read
+
+#musthave x y
+
+
+//// plotting area..
+#include $chunk_area
+#if @cats = ""
+  // xautorange: datafield=@x incmult=2.0
+  #if @xrange = ""
+    xautorange: datafield=@x 
+  #else
+    xrange: @xrange
+  #endif
+#else
+  xscaletype: categories
+  xcategories: datafield=@x
+  #if @stubvert = yes
+    xaxis.stubvert: yes
+  #endif
+#endif
+#if @yrange = ""
+  #if @y2 = ""
+    yautorange: datafields=@y,@err combomode=hilo incmult=2.0 
+  #else
+    yautorange: datafields=@y,@y2,@y3,@y4,@y5,@y6,@y7,@y8,@y9 incmult=2.0 
+  #endif
+#elseif @yrange = 0
+  #if @y2 = ""
+    yautorange: datafields=@y,@err combomode=hilo incmult=2.0 lowfix=0
+  #else
+    yautorange: datafields=@y,@y2,@y3,@y4,@y5,@y6,@y7,@y8,@y9 incmult=2.0 lowfix=0
+  #endif
+#else
+  yrange: @yrange
+#endif
+#endproc
+
+//// X axis..
+#include $chunk_xaxis
+#if @cats = ""
+  stubs: inc @xinc
+#else
+  stubs: usecategories
+#endif
+stubcull: yes
+
+//// Y axis...
+#include $chunk_yaxis
+stubcull: yes
+
+
+//// title..
+#include $chunk_title
+
+
+//// user pre-plot include...
+#if @include1 != ""
+  #include @include1
+#endif
+
+
+// turn off point symbols if doing stairsteps..
+#if @step = yes
+  #set pointsym = ""
+  #set pointsym2 = ""
+  #set pointsym3 = ""
+  #set pointsym4 = ""
+  #set pointsym5 = ""
+  #set pointsym6 = ""
+  #set pointsym7 = ""
+  #set pointsym8 = ""
+  #set pointsym9 = ""
+#endif
+
+//// do error bar for group 1
+#if @err != ""
+ #proc bars
+  locfield: @x
+  lenfield: @y
+  errbarfield: @err
+  thinbarline: color=@errcolor width=@errthick
+  tails: @errwidth
+  truncate: yes
+#endif
+
+//// do line plot for group 1
+#proc lineplot
+xfield: @x
+yfield: @y
+#if @step = yes
+  stairstep: @step
+  lastseglen: 0.2
+#endif
+#if @fill != ""
+  fill: @fill
+#else
+  linedetails: @linedet
+#endif
+legendlabel: @name
+pointsymbol: @pointsym
+#if @pointsym = none
+  legendsampletype: line
+#else
+  legendsampletype: line+symbol
+#endif
+#if @gapmissing != ""
+  gapmissing: @gapmissing
+#endif
+
+  
+//// do error bars and line for group 2
+#if @y2 != ""
+
+  #if @err2 != ""
+    #proc bars
+    locfield: @x
+    lenfield: @y2
+    errbarfield: @err2
+    thinbarline: color=@errcolor width=@errthick
+    tails: @errwidth
+    truncate: yes
+  #endif
+
+  #proc lineplot
+  xfield: @x
+  yfield: @y2
+  legendlabel: @name2
+  #if @fill2 != ""
+    fill: @fill2
+  #else
+    linedetails: @linedet2
+  #endif
+  #if @step = yes
+    stairstep: @step
+    lastseglen: 0.2
+  #endif
+  pointsymbol: @pointsym2
+  #if @pointsym2 = none
+    legendsampletype: line
+  #else
+    legendsampletype: line+symbol
+  #endif
+  #if @gapmissing != ""
+    gapmissing: @gapmissing
+  #endif
+#endif
+
+
+//// do error bars and line for group 3
+#if @y3 != ""
+
+  #if @err3 != ""
+    #proc bars
+    locfield: @x
+    lenfield: @y3
+    errbarfield: @err3
+    thinbarline: color=@errcolor width=@errthick
+    tails: @errwidth
+    truncate: yes
+  #endif
+
+  #proc lineplot
+  xfield: @x
+  yfield: @y3
+  legendlabel: @name3
+  #if @fill3 != ""
+    fill: @fill3
+  #else
+    linedetails: @linedet3
+  #endif
+  #if @step = yes
+    stairstep: @step
+    lastseglen: 0.2
+  #endif
+  pointsymbol: @pointsym3
+  #if @pointsym3 = none
+    legendsampletype: line
+  #else
+    legendsampletype: line+symbol
+  #endif
+  #if @gapmissing != ""
+    gapmissing: @gapmissing
+  #endif
+#endif
+
+
+//// do error bars and line for group 4
+#if @y4 != ""
+
+  #if @err4 != ""
+    #proc bars
+    locfield: @x
+    lenfield: @y4
+    errbarfield: @err4
+    thinbarline: color=@errcolor width=@errthick
+    tails: @errwidth
+    truncate: yes
+  #endif
+
+  #proc lineplot
+  xfield: @x
+  yfield: @y4
+  legendlabel: @name4
+  #if @fill4 != ""
+    fill: @fill4
+  #else
+    linedetails: @linedet4
+  #endif
+  #if @step = yes
+    stairstep: @step
+    lastseglen: 0.2
+  #endif
+  pointsymbol: @pointsym4
+  #if @pointsym4 = none
+    legendsampletype: line
+  #else
+    legendsampletype: line+symbol
+  #endif
+  #if @gapmissing != ""
+    gapmissing: @gapmissing
+  #endif
+  
+#endif
+
+//// do error bars and line for group 5
+#if @y5 != ""
+
+  #if @err5 != ""
+    #proc bars
+    locfield: @x
+    lenfield: @y5
+    errbarfield: @err5
+    thinbarline: color=@errcolor width=@errthick
+    tails: @errwidth
+    truncate: yes
+  #endif
+
+  #proc lineplot
+  xfield: @x
+  yfield: @y5
+  legendlabel: @name5
+  #if @fill5 != ""
+    fill: @fill5
+  #else
+    linedetails: @linedet5
+  #endif
+  #if @step = yes
+    stairstep: @step
+    lastseglen: 0.2
+  #endif
+  pointsymbol: @pointsym5
+  #if @pointsym5 = none
+    legendsampletype: line
+  #else
+    legendsampletype: line+symbol
+  #endif
+  #if @gapmissing != ""
+    gapmissing: @gapmissing
+  #endif
+  
+#endif
+    
+
+//// do error bars and line for group 6
+#if @y6 != ""
+
+  #if @err6 != ""
+    #proc bars
+    locfield: @x
+    lenfield: @y6
+    errbarfield: @err6
+    thinbarline: color=@errcolor width=@errthick
+    tails: @errwidth
+    truncate: yes
+  #endif
+
+  #proc lineplot
+  xfield: @x
+  yfield: @y6
+  legendlabel: @name6
+  #if @fill6 != ""
+    fill: @fill6
+  #else
+    linedetails: @linedet6
+  #endif
+  #if @step = yes
+    stairstep: @step
+    lastseglen: 0.2
+  #endif
+  pointsymbol: @pointsym6
+  #if @pointsym6 = none
+    legendsampletype: line
+  #else
+    legendsampletype: line+symbol
+  #endif
+  #if @gapmissing != ""
+    gapmissing: @gapmissing
+  #endif
+  
+#endif
+    
+//// do error bars and line for group 7
+#if @y7 != ""
+
+  #if @err7 != ""
+    #proc bars
+    locfield: @x
+    lenfield: @y7
+    errbarfield: @err7
+    thinbarline: color=@errcolor width=@errthick
+    tails: @errwidth
+    truncate: yes
+  #endif
+
+  #proc lineplot
+  xfield: @x
+  yfield: @y7
+  legendlabel: @name7
+  #if @fill7 != ""
+    fill: @fill7
+  #else
+    linedetails: @linedet7
+  #endif
+  #if @step = yes
+    stairstep: @step
+    lastseglen: 0.2
+  #endif
+  pointsymbol: @pointsym7
+  #if @pointsym7 = none
+    legendsampletype: line
+  #else
+    legendsampletype: line+symbol
+  #endif
+  #if @gapmissing != ""
+    gapmissing: @gapmissing
+  #endif
+  
+#endif
+    
+//// do error bars and line for group 8
+#if @y8 != ""
+
+  #if @err8 != ""
+    #proc bars
+    locfield: @x
+    lenfield: @y8
+    errbarfield: @err8
+    thinbarline: color=@errcolor width=@errthick
+    tails: @errwidth
+    truncate: yes
+  #endif
+
+  #proc lineplot
+  xfield: @x
+  yfield: @y8
+  legendlabel: @name8
+  #if @fill8 != ""
+    fill: @fill8
+  #else
+    linedetails: @linedet8
+  #endif
+  #if @step = yes
+    stairstep: @step
+    lastseglen: 0.2
+  #endif
+  pointsymbol: @pointsym8
+  #if @pointsym8 = none
+    legendsampletype: line
+  #else
+    legendsampletype: line+symbol
+  #endif
+  #if @gapmissing != ""
+    gapmissing: @gapmissing
+  #endif
+  
+#endif
+
+//// do error bars and line for group 9
+#if @y9 != ""
+
+  #if @err9 != ""
+    #proc bars
+    locfield: @x
+    lenfield: @y9
+    errbarfield: @err9
+    thinbarline: color=@errcolor width=@errthick
+    tails: @errwidth
+    truncate: yes
+  #endif
+
+  #proc lineplot
+  xfield: @x
+  yfield: @y9
+  legendlabel: @name9
+  #if @fill9 != ""
+    fill: @fill9
+  #else
+    linedetails: @linedet9
+  #endif
+  #if @step = yes
+    stairstep: @step
+    lastseglen: 0.2
+  #endif
+  pointsymbol: @pointsym9
+  #if @pointsym9 = none
+    legendsampletype: line
+  #else
+    legendsampletype: line+symbol
+  #endif
+  #if @gapmissing != ""
+    gapmissing: @gapmissing
+  #endif
+  
+#endif
+    
+// do legend
+#if @name != "#usefname" || @header = yes
+  #proc legend
+    location: min+0.6 min-0.44
+    noclear: yes
+    specifyorder: @name
+                  @name3
+                  @name5
+                  @name7
+                  @name9
+
+  #proc legend
+    location: min+2.6 min-0.44
+    specifyorder: @name2
+                  @name4
+                  @name6
+                  @name8
+#endif
+
+//// user post-plot include..
+#if @include2 != ""
+  #include @include2
+#endif
+

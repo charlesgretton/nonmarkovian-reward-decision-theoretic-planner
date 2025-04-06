@@ -1,0 +1,95 @@
+#!/bin/bash
+cd tests
+program=../nmrdpp
+
+verbose=off
+alltests=yes
+
+passed=0
+total=0
+
+runtest() {
+    test_input=`echo $1 | perl -p -e 's/^\.\///;s/^tests\///;s/(\.input)?$/\.input/'`
+    test="${test_input%%.input}"
+    exp_f="${test}.expected"
+
+    total=$[ total + 1]
+
+    if [ $verbose == on ]; then
+	echo -n "Test ${test}: "
+    fi
+    if "$program" "$test_input" >test.output 2>test.stderr; then
+	if [ -f "$exp_f" ]; then
+	    if cat "${exp_f}.stderr" 2>/dev/null | diff - test.stderr >test.diff; then
+		if diff "$exp_f" test.output >test.diff; then
+		    passed=$[ passed + 1 ]
+		    if [ $verbose == on ]; then
+			echo "passed"
+		    fi
+		else
+		    if [ $verbose == off ]; then
+			echo -n "Test ${test} "
+		    fi
+		    echo "failed - diff follows"
+		    echo '--------------------------------------------------'
+		    cat test.diff
+		fi
+	    else
+		if [ $verbose == off ]; then
+		    echo -n "Test ${test} "
+		fi
+		echo "error diff failed:"
+		cat test.diff
+	    fi
+	else
+	    if [ $verbose == off ]; then
+		echo -n "Test: ${test}:"
+	    fi
+	    echo " creating baseline"
+	    mv test.output "$exp_f"
+	    if [ "$(cat test.stderr)" != "" ]; then
+		mv test.stderr ${exp_f}.stderr
+	    fi
+	fi
+    else
+	echo "Test $test exited with error code: $?"
+    fi
+}
+
+while getopts "hvs:t:" flag; do
+    case $flag in
+	h)
+	    cat <<EOF
+Usage: $0 [options]
+  -h  display this help message
+  -v  verbose
+  -s  run a particular test set only
+  -t  run a particular test
+EOF
+	    exit
+	    ;;
+	v)
+	    verbose=on
+	    ;;
+	s)
+	    for i in $(cat ${OPTARG}.testset); do
+		runtest $i
+	    done
+	    alltests=no
+	    ;;
+	t)
+	    runtest $OPTARG
+	    alltests=no
+	    ;;
+    esac
+done
+
+if [ $alltests != "no" ]; then
+    for test_input in $(find . -name '*.input'); do
+	runtest $test_input
+    done
+fi
+rm -f test.output test.diff test.stderr
+cd ..
+
+echo "$passed of $total tests passed"

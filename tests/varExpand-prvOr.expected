@@ -1,0 +1,16 @@
+
+
+digraph "Effect of action `a' on proposition `(prv or <2 a)'" {
+center = true;
+edge [dir = none];
+n0 [label="a"];
+n0 -> n1;
+n0 -> n2 [style=dashed]
+n1 [label="1.00" shape=box];
+n2 [label="(prv a)"];
+n2 -> n1;
+n2 -> n3 [style=dashed]
+n3 [label="0.00" shape=box];
+}
+
+

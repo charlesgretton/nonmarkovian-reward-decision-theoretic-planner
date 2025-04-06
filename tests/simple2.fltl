@@ -1,0 +1,10 @@
+//This reward element specifies that if propositions $P$ and $Q$ are
+//true in the third state from every such state reward is allocated.
+[simple2,1.0]? fbx ( (nxt ^3 ((P and Q) -> $) ) )
+
+action NA
+        Q       (Q      (0.50)
+                        (0.50))
+        P       (P      (0.50)
+                        (0.50))
+endaction

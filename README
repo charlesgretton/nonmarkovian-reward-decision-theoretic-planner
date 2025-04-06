@@ -1,0 +1,945 @@
+--------NMRDPP second release------------------------
+----------------------------------------------------
+----------------------------------------------------
+
+These are the release notes for NMRDPP.  Read them carefully, as they
+tell you what this is all about, explain how to install NMRDPP, and
+what to do if something goes wrong.
+
+    NMRDPP is distributed under the LGPL (LICENSE) and is Copyright
+(C) 2002, 2003. What this means is that:
+
+  This library is free software; you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as
+  published by the Free Software Foundation; either version 2.1 of the
+  License, or (at your option) any later version.
+
+  This library is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+  USA
+
+WHAT IS NMRDPP?
+---------------
+
+    The software system, known as NMRDPP (non--MarkovianReward
+Decision Process Planner), facilitates planning in completely
+observable stochastic domains, where dynamics are modelled as a
+stochastic automata and reward is non--Markovian.  The target system
+is implemented using a range of experimental algorithms and
+frameworks, thus also facilitates comparative experimentation in the
+field of planning.  Problem domain rewards are specified by the user
+in either $\$FLTL$ (Future Linear Temporal Logic with Rewards) or
+$PLTL$ (Past Linear Temporal Logic). NMRDPP generates a stationary
+policy for a user specified problem domain.
+
+    If the above doesn't make any sense to you then we suggest you
+read the following.
+
+@inproceedings{bacchus:etal:96,
+author={F. Bacchus and C. Boutilier and A. Grove},
+title={Rewarding Behaviors},
+booktitle={Proc. AAAI-96},
+pages={1160-1167},
+year={1996}
+}
+
+@inproceedings{bacchus:etal:97,
+author={F. Bacchus and C. Boutilier and A. Grove},
+title={Structured Solution Methods for Non-Markovian Decision Processes},
+booktitle={Proc. AAAI-97},
+pages={112-117},
+year={1997}
+}
+
+@article{bacchus:kabanza:00,
+author={ F. Bacchus and F. Kabanza },
+title={ Using Temporal Logic to Express Search Control Knowledge for Planning},
+journal={Artificial Intelligence},
+volume={116},
+number={1-2},
+year={2000}
+}
+
+@article{boutilier:etal:00,
+author={C. Boutilier and R. Dearden and M. Goldszmidt},
+title={Stochastic dynamic programming with factored representations},
+journal={Artificial Intelligence},
+volume={121},
+number={1-2},
+pages={49-107},
+year={2000}}
+
+@book{howard:60,
+author={R.A. Howard},
+title={Dynamic Programming and Markov Processes},
+publisher={MIT Press},
+address={Cambridge, MA},
+year={1960}}
+
+@inproceedings{thiebaux:etal:02,
+author={S. Thi\'ebaux and F. Kabanza and J. Slaney},
+title={Anytime State-Based Solution Methods for Decision Processes with Non-Markovian
+Rewards},
+booktitle={Proc. UAI-02},
+pages={501-510},
+year={2002}}
+
+HOW CAN I CONTACT THE AUTHORS?
+------------------------------
+
+You can email _David Price_ at :: david.price@csl.anu.edu.au
+You can email _Charles Gretton_ at :: charles.gretton@csl.anu.edu.au
+You can email _Sylvie Thiébaux_ at :: thiebaux@cslws1.anu.edu.au
+
+If you would like to contact the authors via snail mail use the
+following postal address:
+
+NMRDPP Authors
+Computer Sciences Laboratory RSISE, Building 115 The Australian
+National University Canberra, ACT
+Australia 0200
+
+THANKS TO!
+----------
+
+We would also like to thank the following people:
+
+John Slaney
+Rajeev Goré
+Eric Hansen
+Zhenghzhu Feng
+Froduald Kabanza
+
+TABLE OF CONTENTS:
+------------------
+
+Sections marked with a "*" are optional reading.
+
+<> OBTAINING AND INSTALLING NMRDPP
+<> GETTING TO KNOW NMRDPP
+<*> DOMAIN SPECIFICATION FILE
+<*> TO DEVELOPERS
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        OBTAINING AND INSTALLING NMRDPP
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+WHERE CAN I GET NMRDPP:
+-----------------------
+
+- Download the system at:
+
+    http://csl.anu.edu.au/~charlesg/nmrdpp
+
+ON WHAT SYSTEMS HAS NMRDPP BEEN TESTED?
+---------------------------------------
+
+    Debian GNU/Linux 2.2 "Potato"
+    Debian GNU/Linux 3.0 "woody"
+    RedHat 7.2 (gcc > 3.0) 
+    SunOS 5.8
+    SunOS 5.9
+
+WHAT COMPILER IS REQUIRED?
+--------------------------
+
+- In theory NMRDPP is written in $ISO/IEC$ $14882:1998$
+  c++. In practice however, NMRDPP has only been compiled using GCC, the
+  GNU Compiler Collection (http://gcc.gnu.org/). The following
+  distributions have been used to compile NMRDPP.
+
+      gcc version 2.95.2 (You will need to download the sstream header.)
+      gcc version 3.1
+      gcc version 3.2.3
+
+  The GCC c++ compiler is usually called g++. The binary is installed
+  at
+
+      /usr/local/bin
+
+  on most systems. To see what version of the c++ compiler you have,
+  type:
+
+     /usr/local/bin/g++ -v
+
+WHAT SOFTWARE IS REQUIRED?
+--------------------------
+
+- CUDD-2.3.1 :: (http://vlsi.colorado.edu/~fabio/CUDD/cuddIntro.html)
+
+- MTL-2.1.2-21 :: (http://www.osl.iu.edu/research/mtl/)
+    NOTE: LAPACK is not required.
+
+    NOTE: If your c++ compiler supports limits, ie: the compiler does
+          not report any errors when a source file includes the text:
+      
+            #include <limits>
+        
+        then place the following line of code in 
+        ($PATH_TO_MTL)/mlt/mtl_config.h
+
+            #define MTL_CMPLR_HAS_LIMITS
+
+- readline-4.3 :: (http://www.gnu.org/directory/libs/readline.html)
+    NOTE: Most UNIX systems will already have this library installed.
+
+    NOTE: Earlier versions of readline are known to cause problems.
+
+- ruby 1.6.8 :: (http://www.ruby-lang.org/)
+
+OPTIONAL SOFTWARE:
+------------------
+
+- dot version 1.8.9 :: (http://www.research.att.com/sw/tools/graphviz/)
+
+- gv 3.5.8 :: (http://www.cs.wisc.edu/~ghost/)
+
+
+INSTALLING NMRDPP:
+------------------
+
+- If you install the full sources, put the NMRDPP tarball in a
+  directory where you have the appropriate permissions (e.g. your home
+  directory) and unpack it:
+
+		gzip -cd nmrdpp.tar.gz | tar xvf -
+
+  or on some systems:
+
+                tar zxfv nmrdpp.tar.gz
+
+  or if you have a bzip2 distribution:
+
+		tar jxfv nmrdpp.tar.bz2
+  
+  or for some older versions of tar:
+
+                tar Ixfv nmrdpp.tar.bz2
+
+- Make sure you have no stale .o files and dependencies lying around:
+
+		cd nmrdpp
+	        make clean
+
+  You should now have the sources ready for configuration and
+  compilation.
+
+- Once you have this source installed then NMRDPP is compiled by
+  executing the following commands.
+
+		./configure (YOUR SYSTEMS OPTIONS -- see Below)
+
+		make
+
+  remember that after executing the configure script check the
+  Makefile for further site-dependent configuration.
+
+- NMRDPP should have no trouble at all compiling on a system without
+  automake (http://www.gnu.org/software/automake/), however you will
+  need ruby (http://www.ruby-lang.org/).
+
+  The following are examples of passing options to the ruby $configure$
+  script:
+
+     *SunOS*
+     ./configure --cudd-path ../cudd 
+                 --mtl-path ../mtl-2.1.2-21/ 
+                 --flex-path /usr/local/flex-2.5.4 
+                 --readline-path $HOME/downloads/readline-4.3
+
+     *GNU/Linux*
+     ./configure --cudd-path /usr/local/cudd-2.3.1
+                 --flex-path /usr/
+                 --mtl-path /usr/local/mtl-2.1.2-21/
+                 --optimise
+                 --cpu pentium4
+                 --sse
+                 --align-double
+                 --sse2
+
+  Some options are mandatory; the configure script will inform you of a
+  mandatory option that you have omitted. To see a list of available
+  options type:
+
+      ./configure --help
+
+- Good luck!
+
+IF SOMETHING GOES WRONG:
+------------------------
+
+- Try, try again, then quit.
+
+- If you like, and you have found a _bug_, send a bug report to one of
+  the Authors (subject = "NMRDPP BUG REPORT").
+  
+  Include as many details as you possibly can in this report, so that
+  we can try to fix the problem. 
+
+
+
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        GETTING TO KNOW NMRDPP
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+GETTING STARTED USING NMRDPP:
+-----------------------------
+
+- The system compiles, congratulations! Of course, thats just the easy
+  part. To start NMRDPP type:
+
+      ./nmrdpp
+
+  in the directory in which the system was compiled.
+
+- Once NMRDPP is invoked, you will be presented with a command line (a
+  shell like interface). Like any advanced shell you should be able to
+  access history (try pressing the up arrow), complete commands (type
+  in "hel" and then press the "tab" key), search through the command
+  history (press "^r" (Control-r) and then start typing a command) and
+  other time saving devices associated with the readline library. To
+  see what commands have been registered with the interface type in:
+
+      > help
+
+- That may be too much information. There are a couple of things you can
+  do in this situation. You can pipe the information to a file and
+  read it in your favourite editor:
+
+      > help > "fileName"
+      > "" | "emacs fileName"
+
+  You could also pipe it to your favourite shell utilities:
+
+      > help | "more"
+      > help | "grep 'loadWorld'"
+
+- If a particular command catches your attention, then more detailed
+  help can be requested with the command:
+
+      > help commandName
+
+- Finally, having to remember and type in commands at the interface can
+  be frustrating, thus NMRDPP also provides support for such things to
+  be read from an external file:
+
+      > include("fileName")
+
+  This command reads and parses the contents of the argument file as
+  though it were being typed at the interface. As we mentioned earlier,
+  tab completion is able to help you locate fileName.
+
+INTRODUCING STATE BASED POLICY COMPUTATION:
+-------------------------------------------
+
+- Now load a world or NMRDP domain. The directory ./tests contains
+  some examples:
+
+      > loadWorld("./tests/someDomain.(pltl{or}fltl)")
+
+  If the filename is long and tedious, try tab completion (e.g. try
+  pressing tab when you have only partially typed in the file name and
+  see if the interface can save you time by typing in the rest for
+  you).
+
+- Then preprocess the domain. If you are unsure about what this step
+  is for, have a look at the online help provided for the command.
+
+  In the case that a PLTL domain was loaded:
+
+      > preprocess("mPltl")
+
+  or for a crude but rapid PLTL preprocessing:
+
+      > preprocess("pltl")
+
+  In the case that an FLTL domain was loaded:
+
+      > preprocess("fltl")
+
+- Now we have a labelled start state, and labels for, or a means of
+  labelling, all the grounded states. Our intention is to generate the
+  XMDP, an MDP which is equivalent to the NMRDP that was loaded. We
+  can see how much of this domain has been generated by preprocessing
+  as follows:
+
+      > printDomain("")
+
+  Later on we shall demonstrate how to generate a user friendly
+  postscript file from this information.
+
+- Expansion of the domain is achieved by typing in:
+
+      > expand
+
+- Perhaps this is taking too long. Type ^z (Control-z) to pause the
+  expansion. Many of the commands NMRDPP supports, including but not
+  exclusively dynamic programming algorithms, support pause
+  functionality, some more so than others. The registered
+  command decides when it is ready to pause, thus some computation can
+  take a while to pause while in other cases it can be nearly
+  instantaneous. When a command is paused, you can see what jobs you
+  have running as follows:
+
+      > jobs
+
+  You can continue the jobs as follows:
+
+      > continue
+
+  If you do not wish the job to continue, then the following command
+  is provided to push the job off the jobs list:
+
+      > stop
+
+- While a job is paused, you can take the opportunity to look at some
+  features of the MDP that is being generated. For example, the number
+  of states generated so far:
+
+      > domainStateSize
+
+  the amount of memory currently allocated to the MDP being generated:
+
+      > domainMemorySize
+
+  One can also print the domain. Later on we shall demonstrate how to
+  generate a user friendly postscript file from this information:
+
+      > printDomain("")
+
+  As usual, we can list the actions that are available, domain
+  propositions and action details as follows:
+
+      > actions
+      > propositions
+      > actionSpec
+
+- Other interesting statistics that are available include:
+
+      > longestLabel
+      > averageLabelSize
+
+  These report the operator length of the state labels, ie: reward
+  specifications.
+
+- Once expansion is complete, we would like to compute the optimal
+  policy. There are two ways of calculating this. The first is using
+  value iteration:
+
+      > valIt(0.95, 0.0001)
+
+- The second method is by using policy iteration:
+
+      > polIt(0.95)
+
+- Try pausing these processes and looking at some of the statistics
+  NMRDPP has been collecting. 
+
+      > valueDifference
+  
+      > iterationCount
+
+- To inspect the policy which dynamic programming methods compute, use
+  the following:
+
+      > getPolicy
+
+STARTING AND STOPPING ACCOUNTING THREADS:
+-----------------------------------------
+
+- Having to stop the expansion or policy calculation to obtain domain
+  or policy attributes is not always appropriate, thus accounting threads
+  are provided which periodically report such statistics. For example,
+  if before or during expansion you wish to have the number of states
+  expanded reported at $5$ second intervals the following command is
+  sufficient:
+
+      > expansionStates(5)
+
+  To have the memory usage reported at $10$ second intervals use:
+
+      > expansionMemory(10)
+
+
+- If during value iteration you would like the "valueDifference" to be
+  reported at $1$ second intervals:
+
+      > valueDifferenceAtInterval(1)
+
+- To turn off the accounting threads simply pass the value $0$ as
+  the argument. For example:
+
+      > valueDifferenceAtInterval(0)
+
+  turns off the thread which would report the "valueDifference".
+
+STATE BASED POLICY COMPUTATION WITH SEARCH:
+-------------------------------------------
+
+- I'll assume that you have already loaded and preprocessed a domain
+  (see above). Now we want to calculate the policy but want to avoid
+  unnecessary state space expansion. For this we shall appeal to
+  LAO*. For details of this algorithm see the paper:
+
+    @article{hansen:zilberstein:01,
+    author={E. Hansen and S. Zilberstein},
+    title={{LAO$^*$}: A Heuristic Search Algorithm that Finds Solutions
+           with Loops},
+    journal={Artificial Intelligence},
+    volume={129},
+    pages={35-62},
+    year={2001}}
+
+- Out of the box, the heuristic value of a state is the crudest
+  possible (the sum of all reward values in the NMRDP). 
+
+  *ASIDE* :: The source files pertinent to LAO* are "LAO.h++",
+             "LAO_templates.h++" and "LAO.c++". If you would like to
+             change the heuristic, then the key call to change is that
+             to "setValue(...)" in "LAO_templates.h++".
+
+  None-the-less this can still be an interesting and even time saving
+  exercise. LAO* is invoked as follows:
+
+      > LAO("polIt", 0.95)
+
+  where the first argument specifies the users choice of dynamic 
+  programming algorithm and the second argument is the discount 
+  factor. In the above case, the choice of algorithm was policy 
+  iteration.
+
+- If value iteration is the preferred dynamic programming algorithm
+  then the following invocation is necessary:
+
+      > LAO("valIt", 0.95, 0.0001)
+
+  here the last argument is the acceptable error (epsilon). Value
+  iteration shall terminate when the computed value function is within
+  $epsilon/2$ of the optimal.
+
+- Again this process can be paused, ^z (Control-z), as we saw in the
+  previous section.
+
+STRUCTURED METHODS:
+-------------------
+
+- The only structured method implemented by the system is the SPUDD
+  algorithm. This algorithm is invoked via the "spudd" command.  The
+  rewards must be specified using PLTL (FLTL will not work at
+  present).
+
+      > loadWorld("tests/piano-without-constraints.pltl")
+
+- We can examine some of the state characterising propositions:
+
+      > propositions
+      c
+      c1
+      d
+      e
+      f
+      g
+      a
+      b
+
+- If any temporal operators are used in expressing reward (even if
+  they aren't, this won't do any harm), the command "PLTLvarExpand"
+  must be run. This converts the reward formulae into Markovian form by
+  adding extra variables:
+
+      > PLTLvarExpand
+
+- As we can see, propositions have been added with names that
+  represent the temporal value with witch they correspond:
+
+      > propositions
+      c
+      c1
+      d
+      e
+      f
+      g
+      a
+      b
+      (prv (~c1 snc c))
+      (prv c)
+      (prv d)
+      (prv e)
+      (prv f)
+      (prv g)
+      (prv a)
+      (prv (prv (~c1 snc c)))
+      (prv b)
+      (prv (~c snc c1))
+      (prv c1)
+      (prv (prv (~c snc c1)))
+
+- The command "autoConstrain" is optional, and if used should probably
+  be run after "PLTLvarExpand", but before "spudd".  It attempts to
+  take advantage of unreachable areas of the state space, but only
+  makes sense if a start state can be assumed:
+
+      > autoConstrain
+
+- The following converts the automatically generated constraint to dot
+  format, runs dot to render it as postscript, then displays the
+  postscript using gv:
+
+      > displayDot(autoConstraintToDot)
+
+- If you wanted to use ghostview instead of gv you could do something
+  like:
+
+      > autoConstraintToDot | "dot -Tps -o tmp.ps && ghostview tmp.ps"
+
+- The following tells spudd to calculate the policy after every
+  iteration, and compare the policies between successive iterations,
+  recording whether it changes or not.  Calculating the policy is at
+  least as computationally intensive as performing an iteration, so
+  this will slow down the algorithm by a factor of at least 2.  As
+  such, it shouldn't be used unless such a record is actually required:
+
+      > monitorSpuddPolicyChanges=true
+
+- Now it is time to execute SPUDD:
+
+      > spudd(0.99, 0.01)
+      converged after 985 iterations with deltaMax = 5.01957e-05
+
+- We can now examine the policy change history. The '1' indicates that
+  the policy changed in the first iteration (it always will), and the
+  '0's indicate that it did not change after that.  This means that we
+  could have still obtained a correct policy if we had stopped after
+  the first iteration.  This is due to the nature of this domain, and
+  is not common to all domains.
+
+      > spuddChangeHistory
+      100000000000000000000000000000000000000000000000.......
+
+- To request the number of different valued leaves in the value
+  function (remember the value function is stored as an ADD).
+
+      > spuddValueLeaves
+      4
+
+- To request the number of nodes that comprise the value function.
+
+      > spuddValueNodes
+      765
+
+- To request the number of paths from the root of the value function
+  to the leaves.
+
+      > spuddValuePaths
+      2465
+
+- We can request the density of the value function as follows. Density
+  is defined as the ratio of the number of minterms (Product (AND)
+  term in which all variables appear, as a literal, once) to the
+  number of nodes.
+
+      > spuddValueDensity
+      1143.06405
+
+- Also available is the history of the values that are the maximum
+  absolute difference between the computed value function at each
+  iteration
+
+      > spuddDeltaHistory
+      0.99,0.9801,0.970299,
+      ......
+      5.07027e-05,5.01957e-05
+ 
+- At this point, policy and value functions have been produced. We can
+  now inspect these as follows. The value function for the file
+  "tests/piano-without-constraints.pltl" is fairly complex, thus takes
+  quite a while to display.:
+
+      > displayDot(spuddPolicyToDot)
+
+      > displayDot(spuddValueToDot)
+
+- Currently there are no monitoring threads available for structured
+  algorithms.
+
+
+ADVANCED FEATURES (PICTURES):
+-----------------------------
+
+- Although not recommended for large domains, NMRDPP does have a
+  feature, (see the source file "show-domain.rb"), which converts
+  the text generated by the command $printDomain("")$ into a
+  postscript file amenable to your favourite viewer.
+
+      > printDomain("") | "ruby show-domain.rb"
+
+- If your favourite postscript viewer is not "gv", then you shall 
+  have to edit the ruby script "show-domain.rb" to suit your 
+  needs. The source line of interest in this case reads as foll-
+  ows.
+
+      dot -Tps tmp.dot -o tmp.ps && gv tmp.ps
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        DOMAIN SPECIFICATION FILE
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+*NOTE* If you are an avid fan of ruby hacking then you would probably
+*NOTE* enjoy gleaning the information below by looking in the ./experiment
+*NOTE* directory.
+
+- Now that you are comfortable with the NMRDPP interface you would
+  like to make your own domain. Here we shall teach you how this is
+  done.
+
+- In the following, short hand should be pronounced as follows:
+
+  prv => Previously
+  nxt => Next
+  pbx => Always in the past (ie: past box).
+  fbx => Always in the future (ie: future box)
+  pdi => Sometime in the past (ie: past diamond)
+  snc => Since.
+  fut => (Weak) Until.
+  
+
+- An input file (domain specification) comprises an $FLTL or PLTL
+  reward specification accompanied by that of an associated dynamics
+  (MDP). Essentially, reward specifications are ASCII text files which
+  contain three sections:
+
+	1) The initial state (Optional/Common).
+
+        *- This is a set of strings of the form:
+ 
+             Proposition = tt
+
+           where "tt" means that the "Proposition" is initially 
+           true. For an initial value of false the following will
+           suffice: 
+
+             Proposition = ff
+       
+	2) Specifications of the non-Markovian rewards and control
+           knowledge in terms of $FLTL or PLTL respectively.
+       
+	*- Where ID is a string, VAL is a real and Formula is defined below, a
+           reward specification element has the following syntax:
+
+             Reward ::= [ ID , VAL ] ? Formula
+
+	   Where a $FLTL Formula has the following grammar:
+
+             Formula ::= Literal | Formula or Formula | nxt Formula
+    			 | Formula fut Formula | Formula and Formula 
+         		 | Formula -> Formula | fbx Formula 
+         		 | Formula <-> Formula | ~ Formula
+         		 | nxt ^ NUM Formula | nxt and < NUM Formula
+         		 | nxt or < NUM Formula | (Formula)
+
+           and a PLTL Formula has the following grammar:
+
+             Formula ::= Literal | Formula or Formula | prv Formula
+           		 | pdi Formula | Formula snc Formula | Formula and Formula 
+           		 | pbx Formula | Formula <-> Formula | ~ Formula
+           		 | prv ^ NUM Formula | prv and < NUM Formula
+            		 | prv or < NUM Formula | Formula -> Formula
+           		 | (Formula)
+
+	*- The operator precedence should satisfy most users (see
+           parser.y++ L112); however if in doubt use parentheses.
+
+        3) Bayes net CPTs (Conditional Probability Tables) specifying
+           the factored representation of NMRDP actions (Common).
+
+	*-The specification of actions should satisfy the following
+          template:
+
+             action ActionName
+		Proposition1 (ADD)
+		Proposition2 (ADD)
+		...
+	     endaction
+
+	*- Where an ADD is a real (ie: leaf) or a Proposition followed
+           by two ADDs in parentheses, corresponding with the true and
+           false arcs respectively. For example:
+
+	     action feedCat
+		gotCat (1.0)
+		patCat (catInGoodMood (0.85) (0.01))
+	     endaction
+
+        *- Note that when we say ADD here, it is only possible to
+           represent trees in the input file, internally these will be
+           translated into ADDs.  This is because it is too cumbersome
+           to write ADDs in text form.
+
+- There is no naming convention associated with the domain
+  specification file (ie: you can call (name) it whatever you like.)
+
+- To avoid forcing a syntax upon the users, NMRDPP makes two parses of
+  specification files. The first performs text replacement from macro
+  definitions.
+
+- Each macro definition must appear on a separate line in the input
+  file. Macro definitions shall consist of three space character
+  separated parts:
+
+	1) The indicator part, which shall consist of the text
+           "#define"
+    
+	2) The new syntax, which shall consist of a string of
+           characters. This syntax is used to override old syntax in
+           the preprocessing phase.
+    
+	3) The old syntax, which shall consist of a string of ASCII
+           characters. This syntax is replaced during preprocessing
+           with the new syntax.
+
+- An example of a legal macro definition is:
+
+      #define [+] pbx
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        TO DEVELOPERS
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Please, if you do not intend to exercise your rights under the license
+then do not read this section. If you do intend to modify the source,
+then this section shall outline some important points you should
+consider.
+
+- Depending on your development environment you may have a system
+  suited to editing both header and non-header source or perhaps you
+  don't. If you don't, then there is a helpful (very-alpha) ruby script
+  which you may like to take advantage of, which is distributed with
+  the NMRDPP source. This is in the file aptly named "make-header". To
+  use this script:
+
+   1) Add your module to the CLASSES list in the Makefile.
+
+   2) Edit the moduleName.c++. You must ensure that your source file
+      has the following form.
+	
+        #include "common.h++"
+
+        /*Text guarded by this conditional shall be ignored by the compiler
+          when the module is compiled.*/
+
+        #ifdef HEADER
+
+        #include...
+
+        class definitions without method or function declarations.
+
+        #endif
+
+	#include "moduleName.h++"
+	#include...
+
+        /*For a public function*/
+
+        PUBLIC [void/char/...] className::functionName() ___ 
+        {implementation}
+
+        /*For a private function*/
+
+        PRIVATE [void/char/...] className::functionName() ___ 
+        {implementation}
+
+	/*For a public method*/
+
+        PUBLIC VIRTUAL [void/char/...] className::functionName() ___ 
+        {implementation}
+
+        /*For a private method*/
+
+        PRIVATE VIRTUAL [void/char/...] className::functionName() ___ 
+        {implementation}
+
+	/*For protected methods and functions replace PUBLIC and
+	  PRIVATE with PROTECTED. e.g.*/
+
+	PROTECTED VIRTUAL [void/char/...] className::functionName() ___ 
+        {implementation}
+
+	/*For a static function use (PRIVATE and PROTECTED macros in
+	  place of PUBLIC should also work).*/
+
+	PUBLIC STATIC [void/char/...] className::functionName() ___ 
+        
+
+   3) Of course, a good way to learn about using the header generation
+      is by example. If you are stuck, have a look at some of the
+      modules listed in the CLASSES variable of the Makefile. For the more
+      obscure, a recommended starting point is the module
+      "RegistryItem.c++".
+
+   4) If you are not using automatic header generation, we encourage
+      you to respect other developers choice and thus change their
+      source according to header generation instructions outlined
+      above.
+    
+- We have adopted some rather strange programming practices to
+  accommodate the following:
+
+        (see http://gcc.gnu.org/bugs.html#missing) Most C++ compilers
+	(G++ included) do not yet implement export, which is necessary
+	for separate compilation of template declarations and
+	definitions. Without export, a template definition must be in
+	scope to be used. The obvious workaround is simply to place
+	all definitions in the header itself. Alternatively, the
+	compilation unit containing template definitions may be
+	included from the header.
+
+	--
+
+        $[14.6]$ specifies how names are looked up inside a
+        template. G++ does not do this correctly, but for most
+        templates this will not be noticeable.
+
+	--
+
+        One may think it strange that pure virtual functions are
+        re-qualified in derivations of $PCvisitor$. This is due to the
+        scope of C++ overload resolution $[13.3/1996/draft]$.
+
